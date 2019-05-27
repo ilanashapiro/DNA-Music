@@ -1,4 +1,4 @@
-# DNA-Music
+# DNA to Music: Conversion and Analysis
 Converts DNA to MIDI and analyzes harmonic sequences.
 DNA_Music.py has the code for the project
 The midi files are musical representations of the DNA of the organisms they are named for.
