@@ -5,6 +5,7 @@ The midi files are musical representations of the DNA of the organisms they are 
 The filenames ending with "translation_keys.txt" are a record of the musical key changes that occur during translation regions in the DNA (when converted to RNA) for later use in harmonic analysis. <br>
 The .txt files consisting of the scientific name of a species contain DNA taken from the NCBI (National Center for Biotechnology Information) of an organism representing that species. The current gene represented for each organism is p53 tumor suppressor. <br>
 Libraries used were MIDIUtil and Biopython.
+(This project is the final project for CS35 Computer Science for Insight at Harvey Mudd College).
 
 # Instructions on Running the Program
 At the bottom of DNA_Music.py are the 5 runner functions for this program that can be called as desired. If starting with an empty directory tree, you must first populate class directories with nucleotide files and their associated midi and musical keys .txt file by calling write_nucleotides_and_generate_midi_txt_files (with the desired parameters, see function) for at least 1 class and 1 organism/species.
