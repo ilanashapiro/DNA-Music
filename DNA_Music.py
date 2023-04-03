@@ -663,21 +663,45 @@ def generate_midi_and_associated_txt_files():
 				if filename[-3:] == "txt" and not isHarmonicKeys:
 					generate_single_midi_and_txt(foldername, filename, 1, 0)
 
-# write_nucleotides_and_generate_midi_txt_files("Mammalia", "bos taurus", "p53")
-print(classify_species("bos taurus"))
-print(get_species_musicality_score("bos taurus"))
+# write_nucleotides_and_generate_midi_txt_files("Actinopterygii", "chanos chanos", "TP53")
+print(classify_species("salmo"))
+print(get_species_musicality_score("salmo"))
 '''
 Some results:
-classify_species("delphinapterus leucas")  #(beluga whale))
-'Chondrichthyes' #(should be "Mammalia")
-get_species_musicality_score("delphinapterus leucas")
-3.359173126614987
-
+classify_species("gobiocypris rarus")  #(cyprinid fish))
+'Actinopterygii' #(correct!)
+get_species_musicality_score("gobiocypris rarus")
+5.454545454545454
 
 classify_species("bos taurus")  #(cow)
 'Mammalia'  #(correct!)
 get_species_musicality_score("bos taurus")
-4.663212435233161
+5.357142857142856
+
+classify_species("delphinapterus leucas")  #(beluga whale))
+'Amphibia' #(should be "Mammalia")
+get_species_musicality_score("delphinapterus leucas")
+3.6956521739130435
+
+classify_species("oncorhynchus mykiss")  #(rainbow trout))
+'Mammalia' #(should be "Actinopterygii")
+get_species_musicality_score("oncorhynchus mykiss")
+3.262955854126679
+
+classify_species("chanos chanos")  #(rainbow trout))
+'Mammalia' #(should be "Actinopterygii")
+get_species_musicality_score("chanos chanos")
+4.8309178743961345
+
+classify_species("homo sapiens")  #(human))
+'Mammalia' #(correct!)
+get_species_musicality_score("homo sapiens")
+7.792207792207792
+
+classify_species("salmo")  #(salmon))
+'Actinopterygii' #(correct!)
+get_species_musicality_score("salmo")
+5.228758169934641
 '''
 
 
