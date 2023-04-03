@@ -4,7 +4,6 @@ import functools
 from midiutil.MidiFile import MIDIFile
 from Bio import Entrez, SeqIO
 from Bio.Seq import Seq
-from Bio.Alphabet import generic_dna
 
 class NCBI:
 	'''a class to encapsulate the abilities of the Biopython library to access and interpret information from the NCBI (National Institute for Biotechnology Information)'''
@@ -83,76 +82,76 @@ class DNA_to_MIDI:
 	START_CODONS = ["AUG"]
 	STOP_CODONS = ["UAA", "UGA", "UAG"]
 	AMINO_ACIDS= {#essential
-				  "CAU":"C",
-				  "CAC":"C", #histidine
-				  "AUU":"C#",
+                  "AUG":"C", #methionine/start codon
+                  "AUU":"C#",
 				  "AUC":"C#",
 				  "AUA":"C#", #isoleucine
-				  "UUA":"D",
-				  "UUG":"D",
-				  "CUU":"D",
-				  "CUC":"D",
-				  "CUA":"D",
-				  "CUG":"D", #leucine
-				  "AAA":"Eb",
-				  "AAG":"Eb", #lysine
-				  "AUG":"E", #methionine
-				  "UUU":"F",
-				  "UUC":"F", #phenylalanine
-				  "ACU":"F#",
-				  "ACC":"F#",
-				  "ACA":"F#",
-				  "ACG":"F#", #threonine
-				  "UGG":"G", #tryptophan
+                  "AAA":"D",
+				  "AAG":"D", #lysine
+                  "ACU":"Eb",
+				  "ACC":"Eb",
+				  "ACA":"Eb",
+				  "ACG":"Eb", #threonine
+				  "UUU":"E",
+				  "UUC":"E", #phenylalanine
+				  "UGG":"F", #tryptophan
+				  "UUA":"F#",
+				  "UUG":"F#",
+				  "CUU":"F#",
+				  "CUC":"F#",
+				  "CUA":"F#",
+				  "CUG":"F#", #leucine
+				  "CAU":"G",
+				  "CAC":"G", #histidine
 				  "GUU":"Ab",
 				  "GUC":"Ab",
 				  "GUA":"Ab",
 				  "GUG":"Ab", #valine
 
 				  #nonessential
-				  "GCU":"A",
-				  "GCC":"A",
-				  "GCA":"A",
-				  "GCG":"A", #alanine
-				  "GAU":"Bb",
+                  "AAU":"A",
+				  "AAC":"A", #asparagine
+                  "GAU":"Bb",
 				  "GAC":"Bb", #aspartate 
-				  "AAU":"B",
-				  "AAC":"B", #asparagine
+				  "GCU":"B",
+				  "GCC":"B",
+				  "GCA":"B",
+				  "GCG":"B", #alanine
 				  
 				  #conditionally essential
-				  "CGU":"C",
-				  "CGC":"C",
-				  "CGA":"C",
-				  "CGG":"C",
-				  "AGA":"C",
-				  "AGG":"C", #arginine
-				  "CAA":"D",
-				  "CAG":"D",
-				  "GAA":"D",
-				  "GAG":"D", #glutamine/glutamic acid
-				  "UAU":"E",
-				  "UAC":"E", #tyrosine
-				  "UGU":"F",
-				  "UGC":"F", #cysteine
-				  "GGU":"G",
-				  "GGC":"G",
-				  "GGA":"G",
-				  "GGG":"G", #glycine
-				  "CCU":"A",
-				  "CCC":"A",
-				  "CCA":"A",
-				  "CCG":"A", #proline
-				  "AGU":"B",
-				  "AGC":"B",
-				  "UCC":"B",
-				  "UCU":"B",
-				  "UCA":"B",
-				  "UCG":"B", #serine
-
+                  "UAU":"C",
+				  "UAC":"C", #tyrosine
+				  "UGU":"D",
+				  "UGC":"D", #cysteine
+				  "UCC":"E",
+				  "UCU":"E",
+				  "UCA":"E",
+				  "UCG":"E", 
+                  "AGU":"E",
+				  "AGC":"E", #serine
+				  "AGA":"F",
+				  "AGG":"F", 
+                  "CGU":"F",
+				  "CGC":"F",
+				  "CGA":"F",
+				  "CGG":"F", #arginine
+                  "CCU":"G",
+				  "CCC":"G",
+				  "CCA":"G",
+				  "CCG":"G", #proline
+                  "CAA":"A",
+				  "CAG":"A",
+				  "GAA":"A",
+				  "GAG":"A", #glutamine/glutamic acid
+                  "GGU":"B",
+				  "GGC":"B",
+				  "GGA":"B",
+                  "GGG":"B", #glycine
+				  
 				  #stop codons
 				  "UAA":"C",
-				  "UGA":"E",
-				  "UAG":"G"
+                  "UAG":"E",
+				  "UGA":"G"
 				}
 
 	def __init__(self, numTracks):
@@ -301,12 +300,12 @@ class DNA_to_MIDI:
 
 	def get_sequence_complement(self, sequence):
 		'''get the genetic sequence complement (base pairs) with Biopython'''
-		sequence = Seq(sequence, generic_dna)
+		sequence = Seq(sequence)
 		return str(sequence.complement())
 
 	def DNA_to_RNA(self, dna_sequence):
 		'''convert DNA to RNA with Biopython'''
-		dna_sequence = Seq(dna_sequence, generic_dna)
+		dna_sequence = Seq(dna_sequence)
 		return str(dna_sequence.transcribe())
 
 	def write_to_disk(self, fullfileName):
@@ -523,7 +522,7 @@ class Sequence_Classifier:
 		totalFiles = 0
 
 		for item in AllFiles:
-			(foldername, LoDirs, LoFiles) = item   
+			(_, _, LoFiles) = item   
 			for filename in LoFiles:
 				if filename[-len(file_criterion):] == file_criterion:
 					totalFiles += 1
@@ -536,14 +535,15 @@ class Sequence_Classifier:
 		AllFiles = list(os.walk(root_directory))
 
 		for item in AllFiles:
-			(foldername, LoDirs, LoFiles) = item  
+			(foldername, _, LoFiles) = item  
 			isRoot = foldername == root_directory
+			invalidDataDir = isRoot or any(invalidStr in foldername for invalidStr in ['.git', '-']) # things like ICCC-author-kit and the .git folder
 			total_sequences = [0, 0, 0, 0]
 
-			if self.num_files_specify_filename_ending(foldername, "translation_keys.txt") == 0 and not isRoot:
+			if self.num_files_specify_filename_ending(foldername, "translation_keys.txt") == 0 and not invalidDataDir:
 				raise Exception("A class folder must have some harmonic sequence text files for organisms representing species within that class. Populate the class folder " + foldername + " and try again")
 
-			if not isRoot:
+			if not invalidDataDir:
 				for filename in LoFiles:
 					if filename[-len("translation_keys.txt"):] == "translation_keys.txt":
 						fullfilename = os.path.join(foldername, filename)
@@ -575,6 +575,8 @@ class Sequence_Classifier:
 			raise Exception("Cannot classify a species to an empty class folder. Populate the class folder with harmonic sequence data and try again.")
 		
 		index = 0
+		min_distance = 0
+		min_class = ""
 		for class_name, class_sequences in classes_sequences_dictionary.items():
 			if index == 0: #initialize minimum distance to any element in the dictionary
 				min_distance = self.four_dim_distance(class_sequences, self.species_sequences)
@@ -661,24 +663,21 @@ def generate_midi_and_associated_txt_files():
 				if filename[-3:] == "txt" and not isHarmonicKeys:
 					generate_single_midi_and_txt(foldername, filename, 1, 0)
 
+# write_nucleotides_and_generate_midi_txt_files("Mammalia", "bos taurus", "p53")
+print(classify_species("bos taurus"))
+print(get_species_musicality_score("bos taurus"))
 '''
 Some results:
-classify_species("delphinapterus leucas_translation_keys.txt")  #(beluga whale))
-'Insects' #(should be "Mammals")
+classify_species("delphinapterus leucas")  #(beluga whale))
+'Chondrichthyes' #(should be "Mammalia")
 get_species_musicality_score("delphinapterus leucas")
-3.10077519379845
+3.359173126614987
 
 
-classify_species("bos taurus_translation_keys.txt")  #(cow)
-'Chondrichthyes'  #(should be "Mammals")
+classify_species("bos taurus")  #(cow)
+'Mammalia'  #(correct!)
 get_species_musicality_score("bos taurus")
-4.66321243523316
-
-
-classify_species("gobiocypris rarus")  
-'Mammals'  #(should be 'Chondrichthyes') 
-get_species_musicality_score("gobiocypris rarus")
-3.75
+4.663212435233161
 '''
 
 

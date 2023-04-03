@@ -1,0 +1,65 @@
+% This file is iccc.tex.  It contains the formatting instructions for and acts as a template for submissions to ICCC.  It borrows liberally from the AAAI and IJCAI formats and instructions.  It uses the files iccc.sty, iccc.bst and iccc.bib, the first two of which also borrow liberally from the same sources. The format has been updated for the ICCC2022 to include a new, mandatory section to be included in camera-ready manuscripts.
+
+
+\documentclass[letterpaper]{article}
+\usepackage{iccc}
+
+
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{amsmath}
+\usepackage{musicography}
+\pdfinfo{
+/Title (Formatting Instructions for Authors)
+/Subject (Proceedings of ICCC)
+/Author (ICCC)}
+% The file iccc.sty is the style file for ICCC proceedings.
+%
+\title{Listening to Biological Translation: Converting RNA to Music}
+\author{Ilana Shapiro\\
+Computer Science Department\\
+Pomona College\\
+Claremont, CA 91711 USA\\
+issa2018@mymail.pomona.edu\\
+}
+\setcounter{secnumdepth}{0}
+
+\begin{document} 
+\maketitle
+\begin{abstract}
+The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting RNA to musical data in the form of MIDI piano chords. Genetic material from a variety of species is sourced from Entrez, a molecular biology database system of the NCBI. Then, codons inform the harmony in protein-coding regions, while individual nucleotides dictate chords in non-coding regions. Local keys are determined by amino acids in the protein-coding regions and carry over into the non-coding regions. Finally, an analysis of harmonic sequences in the resulting MIDI files is presented, as well as an attempt to classify species into the correct biological class based on this data. By mapping nucleotides and codons to chords and analyzing genetic material as music, BioMus thus gives scientists the means to uniquely conceptualize the process of biological translation.
+
+ONE PARAGRAPH, max 250words
+\end{abstract}
+
+\section{Introduction}
+
+\section{Related Work}
+
+Ingalls et al. present 
+
+\section{Converting DNA to Music}
+
+\subsection{Obtaining Genetic Data}
+
+\subsection{Conversion to MIDI}
+
+\section{Analyzing MIDI for Harmonic Sequences}
+
+\section{Classification and Musicality of Species}
+
+\section{Conclusion}
+
+
+
+\section{Acknowledgments}
+
+I am very grateful to Professor Zachary Dodds of Harvey Mudd College for his invaluable mentorship throughout this project.
+
+
+\bibliographystyle{iccc}
+\bibliography{iccc}
+
+
+\end{document}
