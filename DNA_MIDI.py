@@ -167,12 +167,29 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
         nucleotide = nucleotides[nucleotideIdx]
         base_pair = nucleotides_complement[nucleotideIdx]
 
-        # if nucleotideIdx < len(nucleotides) - 2:
         if nucleotide.isupper():
             # we are in the middle of translation
             if translation_initiated and not translation_completed:
                 triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+2] # should never go out of bounds since the data should always contain a stop codon
                 
+                # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
+                if not triplet_codon.isupper() or len(codon_splice_fragment) > 0:
+                    curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
+                    remaining_length_in_codon = 3 - len(codon_splice_fragment)
+                    
+                    # if this is the latter part of the spliced codon (i.e. we have something like AaAAaaa and we are at the second capital A, and then codon_splice_fragment="AA")
+                    # accounting for the case of something like AaAaAaa in which we need to continue on to the next exon in order to splice together the entire codon
+                    if len(curr_exon_codon_frag) < remaining_length_in_codon: 
+                        codon_splice_fragment += curr_exon_codon_frag
+                        nucleotideIdx += len(curr_exon_codon_frag)
+                        continue
+                    else:
+                        triplet_codon = codon_splice_fragment + curr_exon_codon_frag[0:remaining_length_in_codon]
+                        codon_splice_fragment = ""
+                        nucleotideIdx += remaining_length_in_codon
+                else:
+                    nucleotideIdx += 3
+
                 if nucleotide.isupper() and triplet_codon in STOP_CODONS:
                     volume = int(volume / 2)
                     tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
@@ -193,11 +210,35 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
 
                     translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
 
-                nucleotideIdx += 3
-
-            # we are in an exon, we have not begun translating, and we encounter a start codon for the first time. translation begins
-            elif not translation_initiated and nucleotideIdx < len(nucleotides) - 2 and nucleotides[nucleotideIdx:nucleotideIdx+2] == "ATG": 
+            # we are in an exon, we have not begun translating, and we possibly encounter a start codon for the first time (depending on splicing)
+            elif not translation_initiated and nucleotideIdx < len(nucleotides) - 2: 
                 triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+2]
+
+                # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
+                if not triplet_codon.isupper() or len(codon_splice_fragment) > 0: 
+                    curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
+                    remaining_length_in_codon = 3 - len(codon_splice_fragment)
+                    
+                    # if this is the latter part of the spliced codon (i.e. we have something like AaAAaaa and we are at the second capital A, and then codon_splice_fragment="AA")
+                    # accounting for the case of something like AaAaAaa in which we need to continue on to the next exon in order to splice together the entire codon
+                    if len(curr_exon_codon_frag) < remaining_length_in_codon: 
+                        codon_splice_fragment += curr_exon_codon_frag
+                        nucleotideIdx += len(curr_exon_codon_frag)
+                        continue
+                    else:
+                        triplet_codon = codon_splice_fragment + curr_exon_codon_frag[0:remaining_length_in_codon]
+                        codon_splice_fragment = ""
+                        if triplet_codon != "ATG":
+                            nucleotideIdx += remaining_length_in_codon
+                            continue
+                        else:
+                            nucleotideIdx += 3 # triplet_codon == "ATG" after combining from previous splice
+                elif triplet_codon != "ATG":
+                    nucleotideIdx += 1
+                    continue
+                else:
+                    nucleotideIdx += 3 # triplet_codon == "ATG"
+
                 volume = int(volume * 2)
                 tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
 
@@ -208,15 +249,14 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
                 
                 translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
                 translation_initiated = True
-                nucleotideIdx += 3
-                
+
             # we are in either the 5' or 3' UTR of an exon
             else:
                 nucleotideIdx += 1
 
         else: # lowercase, we are in an intron
-            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide]], time, duration, volume)
-            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair]], time, duration, volume)
+            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide.upper()]], time, duration, volume)
+            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair.upper()]], time, duration, volume)
             nucleotideIdx += 1
                 
         time += duration
@@ -229,6 +269,17 @@ def get_sequence_complement(sequence):
     '''get the genetic sequence complement (base pairs) with Biopython'''
     sequence = Seq(sequence)
     return str(sequence.complement())
+
+def get_uppercase_prefix(input_str):
+    c = input_str[0]
+    idx = 0
+    res = ""
+    while idx < len(input_str) and c.isupper(): 
+        res += c
+        c = input_str[idx]
+        idx += 1
+    return res
+        
 
 def write_to_disk(full_file_name, midi_file):
     '''write the MIDI file to the disk'''
