@@ -159,57 +159,65 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
     translation_keys_file = open(os.path.join(folder_name, track_name + '_translation_keys.txt'), 'w') #create file to write the keys to during translation
 
     nucleotideIdx = 0
-    translation = False
+    translation_initiated = False
+    translation_completed = False
+    codon_splice_fragment = ""
 
     while nucleotideIdx < len(nucleotides):
         nucleotide = nucleotides[nucleotideIdx]
         base_pair = nucleotides_complement[nucleotideIdx]
 
-        if nucleotideIdx < len(nucleotides) - 2:
-            triplet_codon = nucleotide + nucleotides[nucleotideIdx + 1] + nucleotides[nucleotideIdx + 2]
+        # if nucleotideIdx < len(nucleotides) - 2:
+        if nucleotide.isupper():
+            # we are in the middle of translation
+            if translation_initiated and not translation_completed:
+                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+2] # should never go out of bounds since the data should always contain a stop codon
+                
+                if nucleotide.isupper() and triplet_codon in STOP_CODONS:
+                    volume = int(volume / 2)
+                    tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
 
-            if nucleotide.isupper():
-                if translation:
-                    if nucleotide.isupper() and triplet_codon in STOP_CODONS:
-                        volume = int(volume / 2)
-                        tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
-
-                        #longer (minor) chord to signify end of translation.
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
-
-                        translation = False
-                        translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-
-                    else:
-                        tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-
-                        translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-
-                    nucleotideIdx += 3
-                elif triplet_codon == "ATG": # we are in an exon and encounter a start codon. translation begins
-                    volume = int(volume * 2)
-                    tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
-
-                    #longer (major) chord to signify start of translation.
+                    #longer (minor) chord to signify end of translation.
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
-                    
-                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-                    translation = True
-                    nucleotideIdx += 3
-                else:
-                    nucleotideIdx += 1
 
-            else: # lowercase, we are in an intron
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide]], time, duration, volume)
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair]], time, duration, volume)
+                    translation_completed = True
+                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+
+                else:
+                    tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+
+                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+
+                nucleotideIdx += 3
+
+            # we are in an exon, we have not begun translating, and we encounter a start codon for the first time. translation begins
+            elif not translation_initiated and nucleotideIdx < len(nucleotides) - 2 and nucleotides[nucleotideIdx:nucleotideIdx+2] == "ATG": 
+                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+2]
+                volume = int(volume * 2)
+                tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+
+                #longer (major) chord to signify start of translation.
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                
+                translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+                translation_initiated = True
+                nucleotideIdx += 3
+                
+            # we are in either the 5' or 3' UTR of an exon
+            else:
                 nucleotideIdx += 1
+
+        else: # lowercase, we are in an intron
+            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide]], time, duration, volume)
+            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair]], time, duration, volume)
+            nucleotideIdx += 1
                 
         time += duration
 
