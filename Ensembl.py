@@ -11,9 +11,15 @@ def query_ensembl_sequence(species_scientific_name, gene_name):
         symbol=gene_name
     ).get('id')
 
+    data = ensembl_rest.symbol_lookup(
+        species=species_scientific_name,
+        symbol=gene_name
+    )
+    print(data)
     server = "https://rest.ensembl.org"
     ext = "/sequence/id/" + id + "?mask_feature=1" # mask_feature makes it so the exons are in caps and introns in lowercase
 
+    print(server+ext)
     try:
         response = requests.get(server+ext, headers={ "Content-Type" : "text/plain"})
         response.raise_for_status()

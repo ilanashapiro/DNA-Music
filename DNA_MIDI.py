@@ -177,9 +177,10 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
             # we are in the middle of translation
             if translation_initiated and not translation_completed:
                 triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+3] # should never go out of bounds since the data should always contain a stop codon
-                
+                print(triplet_codon)
                 # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
                 if not triplet_codon.isupper() or len(codon_splice_fragment) > 0:
+                    print(codon_splice_fragment)
                     curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
                     remaining_length_in_codon = 3 - len(codon_splice_fragment)
                     
@@ -210,7 +211,6 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
                     translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
 
                 else:
-                    print(nucleotideIdx, "TRANSLATING")
                     (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
@@ -246,7 +246,7 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
                 else:
                     nucleotideIdx += 3 # triplet_codon == "ATG"
 
-                print(nucleotideIdx, "BEGIN TRANSLATION")
+                print("START ", triplet_codon)
                 volume = int(volume * 2)
                 duration = 2
                 (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
