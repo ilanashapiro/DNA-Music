@@ -1,3 +1,4 @@
+from Bio.Seq import Seq
 from midiutil.MidiFile import MIDIFile
 import os, os.path
 
@@ -19,12 +20,6 @@ PITCH_DICTIONARY = {"C": 60,
                     "B": 71}
 KEYS = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"] 
 
-DNA_TO_CHROMATIC = {"A": "",  
-                    "C": "",
-                    "G": "",
-                    "T": ""}
-
-START_CODONS = ["ATG"]
 STOP_CODONS = ["TAA", "TGA", "TAG"]
 AMINO_ACIDS = { #essential
                 "ATG":"C", #methionine/start codon
@@ -98,161 +93,137 @@ AMINO_ACIDS = { #essential
                 "TAG":"E",
                 "TGA":"G" }
 
-TONIC_NOTE = "C"
-MEDIANT_NOTE = "Eb"
-DOMINANT_NOTE = "G"
-
-def __init__(numTracks):
-    '''initialize the instance of DNA_to_MIDI by setting the number of tracks in the MIDI file'''
-    numTracks = numTracks
-    mf = MIDIFile(numTracks) 
-    
-def create_track(folder_name, track_name, track_num, nucleotides=None, tonic = 0, time = 0, duration = 1, repeat = False, 
-                codon = False, start_volume = 50):
-    '''create_track creates the specified track of the midi file with the above parameters specified. Nucleotides refers to the string
-    of DNA nucleotides for the desired organism and gene to be turned into music'''
-    duration = duration
-    repeat = repeat
-    codon = codon
-    volume = start_volume
-    folder_name = folder_name
-
-    if nucleotides == None:
-        raise Exception("Be sure to pass in nucleotides!")
-    nucleotidesDNA = nucleotides
-    nucleotidesRNA = DNA_to_RNA(nucleotides) #convert to RNA for analysis
-    base_pairsRNA = DNA_to_RNA(get_sequence_complement(nucleotides))
-
-    tonic = tonic
-    mediant = tonic + 4
-    dominant = tonic + 7
-
-    time = time
-    volume = start_volume
-
-    duration = duration
-    repeat = repeat
-    codon = codon
-
-    mf.addTrackName(track_num, 0, track_name)
-    mf.addTempo(track_num, time, 200)
-
-    DNA_TO_CHROMATIC["C"] = TONIC_NOTE
-    DNA_TO_CHROMATIC["G"] = MEDIANT_NOTE
-    DNA_TO_CHROMATIC["A"] = MEDIANT_NOTE
-    DNA_TO_CHROMATIC["U"] = DOMINANT_NOTE	
-
-    translation_keys_file = open(os.path.join(folder_name, track_name + '_translation_keys.txt'), 'w') #create file to write the keys to during translation
-
-def change_key(new_key, isMajor):
+def change_key(curr_tonic, new_key, isMajor, dna_to_chromatic_dict):
     '''changes the key given a new key and a mode (major or minor). The intervallic distance between the root of the current key and the root of the new key (e.g. C and A) is determined, 
     and, along with the mode, the tonic, mediant, and dominant notes of the new key (which are the 3 notes of the major/minor triad of that key) are determined'''
-    semitones_up_scale = abs(PITCH_DICTIONARY[tonic_note] - PITCH_DICTIONARY[new_key])
-    tonic += semitones_up_scale 
-    if tonic >= len(KEYS):
-        tonic = tonic - len(KEYS)
+    semitones_up_scale = abs(PITCH_DICTIONARY[curr_tonic] - PITCH_DICTIONARY[new_key])
+    new_tonic = curr_tonic + semitones_up_scale 
+    if new_tonic >= len(KEYS):
+        new_tonic = new_tonic - len(KEYS)
 
     if isMajor: 
-        mediant = tonic + 4
+        mediant = new_tonic + 4
 
     else: #minor 
-        mediant = tonic + 3
+        mediant = new_tonic + 3
 
     if mediant >= len(KEYS):
         mediant = mediant - len(KEYS) 
 
-    dominant = tonic + 7
+    dominant = new_tonic + 7
     if dominant >= len(KEYS):
         dominant = dominant - len(KEYS)
 
-    tonic_note = KEYS[tonic]
-    mediant_note = KEYS[mediant]
-    dominant_note = KEYS[dominant]
+    dna_to_chromatic_dict["A"] = KEYS[new_tonic]
+    dna_to_chromatic_dict["C"] = KEYS[mediant]
+    dna_to_chromatic_dict["T"] = KEYS[mediant]
+    dna_to_chromatic_dict["G"] = KEYS[dominant]
 
-    DNA_TO_CHROMATIC["C"] = tonic_note
-    DNA_TO_CHROMATIC["G"] = mediant_note
-    DNA_TO_CHROMATIC["A"] = mediant_note
-    DNA_TO_CHROMATIC["U"] = dominant_note
+    return new_tonic
 
-def add_notes(track_num):
+def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
     '''adds notes to the MIDI file. Initial key is always C minor. Before the start codon AUG is encountered, individual nucleotides outline
     the 3 notes of minor triad (base pairs form dyads, or 2-note chords). Then, during translation, the key is major and the volume doubles. The
     key is determined by the codon (see the AMINO_ACIDS dictionary above). Individual nucleotides no longer determine the notes; this is now dictated
     by the codons. Each time the key changes based on the codon, the major triad of that key is played, until a stop codon is reached. Then we remain in
     the same minor key as the previous stop codon, but the volume is halved again and individual nucleotides once again outline the notes of the new
     minor triad. Then this process can repeat if another start codon is then encountered'''
-    tripleStop = -1
-    triple = False
+
+    '''create_track creates the specified track of the midi file with the above parameters specified. Nucleotides refers to the string
+    of DNA nucleotides for the desired organism and gene to be turned into music'''
+
+    if nucleotides == None:
+        raise Exception("Be sure to pass in nucleotides!")
+
+    tonic_note_name = "C"
+    mediant_note_name = "Eb"
+    dominant_note_name = "G"
+
+    dna_to_chromatic_dict = {}
+    dna_to_chromatic_dict["A"] = tonic_note_name
+    dna_to_chromatic_dict["C"] = mediant_note_name
+    dna_to_chromatic_dict["T"] = mediant_note_name
+    dna_to_chromatic_dict["G"] = dominant_note_name	
+
+    nucleotides_complement = get_sequence_complement(nucleotides)
+    volume = 50
+    duration = 1
+    time = 0
+    tonic = 0
+    track_num = 0
+
+    midi_file = MIDIFile(1) 
+    midi_file.addTrackName(track_num, 0, track_name)
+    midi_file.addTempo(track_num, 0, 200)
+
+    translation_keys_file = open(os.path.join(folder_name, track_name + '_translation_keys.txt'), 'w') #create file to write the keys to during translation
+
+    nucleotideIdx = 0
     translation = False
 
-    for nucleotideNum in range(len(nucleotidesRNA)):
-        nucleotide = nucleotidesRNA[nucleotideNum]
-        base_pair = base_pairsRNA[nucleotideNum]
+    while nucleotideIdx < len(nucleotides):
+        nucleotide = nucleotides[nucleotideIdx]
+        base_pair = nucleotides_complement[nucleotideIdx]
 
-        if tripleStop == nucleotideNum:
-            triple = False
+        if nucleotideIdx < len(nucleotides) - 2:
+            triplet_codon = nucleotide + nucleotides[nucleotideIdx + 1] + nucleotides[nucleotideIdx + 2]
 
-        if not triple and nucleotideNum < len(nucleotidesRNA) - 2:
-            triple = True
-            tripleStop = nucleotideNum + 3
-            triplet_codon = nucleotide + nucleotidesRNA[nucleotideNum + 1] + nucleotidesRNA[nucleotideNum + 2]
+            if nucleotide.isupper():
+                if translation:
+                    if nucleotide.isupper() and triplet_codon in STOP_CODONS:
+                        volume = int(volume / 2)
+                        tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
 
-            if not translation and triplet_codon in START_CODONS:
-                volume = int(volume * 2)
-                change_key(AMINO_ACIDS[triplet_codon], True)
-                duration = 2
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note], time, duration, volume)
-                time += duration
+                        #longer (minor) chord to signify end of translation.
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+
+                        translation = False
+                        translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+
+                    else:
+                        tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+
+                        translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+
+                    nucleotideIdx += 3
+                elif triplet_codon == "ATG": # we are in an exon and encounter a start codon. translation begins
+                    volume = int(volume * 2)
+                    tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+
+                    #longer (major) chord to signify start of translation.
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                    
+                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+                    translation = True
+                    nucleotideIdx += 3
+                else:
+                    nucleotideIdx += 1
+
+            else: # lowercase, we are in an intron
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide]], time, duration, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair]], time, duration, volume)
+                nucleotideIdx += 1
                 
-                translation = True
-                
-                translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-            
-            elif not translation:
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[DNA_TO_CHROMATIC[nucleotide]], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[DNA_TO_CHROMATIC[base_pair]], time, duration, volume)
-                time += duration
+        time += duration
 
-            elif translation and triplet_codon in STOP_CODONS:
-                volume = int(volume / 2)
-                change_key(AMINO_ACIDS[triplet_codon], False) 
-
-                #longer (minor) chord to signify end of translation.
-                duration = 2
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note], time, duration, volume)
-                time += duration
-
-                translation = False
-
-                translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-
-            elif translation:
-                change_key(AMINO_ACIDS[triplet_codon], True)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note], time, duration, volume)
-                mf.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note], time, duration, volume)
-                time += duration
-
-                translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-        duration = 1
     translation_keys_file.close()
+
+    write_to_disk(full_file_name, midi_file)
 
 def get_sequence_complement(sequence):
     '''get the genetic sequence complement (base pairs) with Biopython'''
     sequence = Seq(sequence)
     return str(sequence.complement())
 
-def DNA_to_RNA(dna_sequence):
-    '''convert DNA to RNA with Biopython'''
-    dna_sequence = Seq(dna_sequence)
-    return str(dna_sequence.transcribe())
-
-def write_to_disk(fullfileName):
+def write_to_disk(full_file_name, midi_file):
     '''write the MIDI file to the disk'''
-    with open(fullfileName[:-4] + ".mid", 'wb') as outf:
-        mf.writeFile(outf)
+    with open(full_file_name[:-4] + ".mid", 'wb') as outf:
+        midi_file.writeFile(outf)
 

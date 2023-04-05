@@ -173,7 +173,6 @@ class DNA_to_MIDI:
         of DNA nucleotides for the desired organism and gene to be turned into music'''
         self.duration = duration
         self.repeat = repeat
-        self.codon = codon
         self.volume = start_volume
         self.folder_name = folder_name
 
@@ -192,7 +191,6 @@ class DNA_to_MIDI:
 
         self.duration = duration
         self.repeat = repeat
-        self.codon = codon
 
         self.mf.addTrackName(track_num, 0, track_name)
         self.mf.addTempo(track_num, self.time, 200)

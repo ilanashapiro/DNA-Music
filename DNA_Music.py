@@ -23,19 +23,16 @@ directory tree.
     Then, in the same way as described above, classify organisms in the root directory into classes or get musicality scores by calling classify_species or get_species_musicality_score.
 '''
 
-def generate_single_midi_and_txt(folderpath, filename, num_tracks, track_num):
+def generate_single_midi_and_txt(folderpath, filename):
     '''(used as helper function for write_nucleotides_and_generate_midi_txt_files. However, if you on your own create nucleotide .txt files through an instance of the NCBI class, 
     you can generate the MIDI and musical keys .txt files on your own through this method. ASSUMES YOU ALREADAY HAVE NUCLEOTIDE .TXT FILES GENERATED. IF NOT USE write_nucleotides_and_generate_midi_txt_files. 
     Description:
     Generate the MIDI and .txt file of associated musical key changes for a given filename. This filename should represent a .txt file of 
     nucleotides for a desired organism/species through the DNA_to_MIDI class.'''
-    fullfilename = os.path.join(folderpath, filename)
-    with open(fullfilename, 'r') as file:
+    full_file_name = os.path.join(folderpath, filename)
+    with open(full_file_name, 'r') as file:
         nucleotides = file.read().replace('\n', '')
-        DNA_MIDI.create_track(folderpath, filename[:-4], track_num, nucleotides)
-        DNA_MIDI.add_notes(track_num)
-
-    DNA_MIDI.write_to_disk(fullfilename)
+        DNA_MIDI.add_notes(folderpath, filename[:-4], full_file_name, nucleotides)
 
 def write_nucleotides_and_generate_midi_txt_files(class_name, species_scientific_name, gene_name, class_folder_path = "."):
     '''runner function that takes in a class name, the scientific name for the desired species, the desired gene name, and optionally a class folder path 
@@ -46,7 +43,7 @@ def write_nucleotides_and_generate_midi_txt_files(class_name, species_scientific
         os.mkdir(os.path.join(class_folder_path, class_name))
         
     Ensembl.write_sequences_file_to_folder(class_name, class_folder_path, species_scientific_name, gene_name)
-    generate_single_midi_and_txt(os.path.join(class_folder_path, class_name), species_scientific_name + ".txt", 1, 0)
+    generate_single_midi_and_txt(os.path.join(class_folder_path, class_name), species_scientific_name + ".txt")
 
 def classify_species(organism_scientific_name):
     '''runner function that classifies a given species into a class (e.g. "Mammals"). Creates an instance of the Harmonic_Sequences class to get the harmonic sequences list (percent of DNA corresponding to 
@@ -73,7 +70,7 @@ def generate_midi_and_associated_txt_files():
             for filename in LoFiles:
                 isHarmonicKeys = filename[-len("translation_keys.txt"):] == "translation_keys.txt"
                 if filename[-3:] == "txt" and not isHarmonicKeys:
-                    generate_single_midi_and_txt(foldername, filename, 1, 0)
+                    generate_single_midi_and_txt(foldername, filename)
 
 class_species_dict_TP53 = {
     "Amphibia":["Rhinatrema bivittatum", "Nanorana parkeri", "Rana temporaria", "Bufo gargarizans", "Geotrypetes seraphini", "Xenopus tropicalis", "Microcaecilia unicolor"],
@@ -105,8 +102,8 @@ highest_musicality_species = ""
 #         print()
 #         total_species += 1
 
-print("PERCENT CLASSIFIED CORRECTLY: ", num_classified_correctly / total_species * 100)
-print("HIGHEST MUSICALITY SPECIES AND SCORE: ", highest_musicality_species, highest_musicality_score)
+# print("PERCENT CLASSIFIED CORRECTLY: ", num_classified_correctly / total_species * 100)
+# print("HIGHEST MUSICALITY SPECIES AND SCORE: ", highest_musicality_species, highest_musicality_score)
 
 
 

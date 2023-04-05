@@ -16,11 +16,11 @@ semitones_from_C = {"C": 0,
                     "Bb": 10,
                     "B": 11}
 
-def get_harmonic_intervals(fullfilename):
+def get_harmonic_intervals(full_file_name):
     '''read in keys from the translation keys file. Each key is separated by a space, so we split the string of keys at the " " in order to get 
     a list of keys. Then, we go through the list and find the intervallic difference between each adjacent pairs of keys, based on the number of semitones each
     key is from C. This list of harmonic intervals is returned.'''
-    with open(fullfilename, 'r') as f:
+    with open(full_file_name, 'r') as f:
         DNA_keys = f.read().split(" ")[:-1] #remove the trailing empty string
 
     nucleotide_intervals = []
@@ -35,7 +35,7 @@ def get_harmonic_intervals(fullfilename):
 
     return nucleotide_intervals
 
-def get_harmonic_sequences(fullfilename):
+def get_harmonic_sequences(full_file_name):
     '''Returns a list of length 4. Each element of this list corresponds to the percentage of the entire list of harmonic intervals corresponding to an organism's DNA that 
     belongs to each of the 4 main harmonic sequences: ascending 5ths (continually moving up a perfect fifth interval, or 7 semitones up), descending 5ths (continually moving 
     down a perfect fifth interval, or 7 semitones down, which, for our purposes, we are considering to be a perfect fourth up/5 semitones up since the range of our key changes 
@@ -66,7 +66,7 @@ def get_harmonic_sequences(fullfilename):
             interval = (11-start_key) + (end_key + 1)
         asc_5_6_intervals.append(interval)
 
-    nucleotide_intervals = get_harmonic_intervals(fullfilename)
+    nucleotide_intervals = get_harmonic_intervals(full_file_name)
 
     desc_5ths_interval = 5  #order is relative here (e.g. in our model we care about the key itself and not the octave/frequency of the note), so we do not care if the interval is up a fourth or down a fifth, these are equivalent for our purposes. we will interpret these as ascending 4ths. also perfect 5ths do not have modes
     asc_5ths_interval = 7 
@@ -181,9 +181,9 @@ def get_harmonic_sequences(fullfilename):
     
     return [percent_desc_5_6, percent_asc_5_6, percent_desc_5ths, percent_asc_5ths]
 
-def get_musicality_rating(fullfilename):
+def get_musicality_rating(full_file_name):
     '''returns a "musicality rating" on a scale of 0-100, where a higher score means more musical. This is equal to the sum of the percentages
     of the list of harmonic intervals for the given organism that correspond to the 4 harmoinic sequences, now on a scale of 0-100. Thus, the greater
     amount of an organism's DNA that corresponds to a harmonic sequence in its musical representation, the more musical it is.'''
-    total_percent_sequences = functools.reduce(lambda a,b : a+b, get_harmonic_sequences(fullfilename))
+    total_percent_sequences = functools.reduce(lambda a,b : a+b, get_harmonic_sequences(full_file_name))
     return total_percent_sequences * 100
