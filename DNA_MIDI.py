@@ -93,10 +93,10 @@ AMINO_ACIDS = { #essential
                 "TAG":"E",
                 "TGA":"G" }
 
-def change_key(curr_tonic, new_key, isMajor, dna_to_chromatic_dict):
+def change_key(curr_tonic, curr_tonic_note_name, new_key, isMajor, dna_to_chromatic_dict):
     '''changes the key given a new key and a mode (major or minor). The intervallic distance between the root of the current key and the root of the new key (e.g. C and A) is determined, 
     and, along with the mode, the tonic, mediant, and dominant notes of the new key (which are the 3 notes of the major/minor triad of that key) are determined'''
-    semitones_up_scale = abs(PITCH_DICTIONARY[curr_tonic] - PITCH_DICTIONARY[new_key])
+    semitones_up_scale = abs(PITCH_DICTIONARY[curr_tonic_note_name] - PITCH_DICTIONARY[new_key])
     new_tonic = curr_tonic + semitones_up_scale 
     if new_tonic >= len(KEYS):
         new_tonic = new_tonic - len(KEYS)
@@ -114,12 +114,18 @@ def change_key(curr_tonic, new_key, isMajor, dna_to_chromatic_dict):
     if dominant >= len(KEYS):
         dominant = dominant - len(KEYS)
 
-    dna_to_chromatic_dict["A"] = KEYS[new_tonic]
-    dna_to_chromatic_dict["C"] = KEYS[mediant]
-    dna_to_chromatic_dict["T"] = KEYS[mediant]
-    dna_to_chromatic_dict["G"] = KEYS[dominant]
+    tonic_note_name = KEYS[new_tonic]
+    mediant_note_name = KEYS[mediant]
+    dominant_note_name = KEYS[dominant]
 
-    return new_tonic
+    dna_to_chromatic_dict["A"] = tonic_note_name
+    dna_to_chromatic_dict["C"] = mediant_note_name
+    dna_to_chromatic_dict["T"] = mediant_note_name
+    dna_to_chromatic_dict["G"] = dominant_note_name
+
+    return (new_tonic, tonic_note_name, mediant_note_name, dominant_note_name)
+
+    
 
 def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
     '''adds notes to the MIDI file. Initial key is always C minor. Before the start codon AUG is encountered, individual nucleotides outline
@@ -170,7 +176,7 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
         if nucleotide.isupper():
             # we are in the middle of translation
             if translation_initiated and not translation_completed:
-                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+2] # should never go out of bounds since the data should always contain a stop codon
+                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+3] # should never go out of bounds since the data should always contain a stop codon
                 
                 # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
                 if not triplet_codon.isupper() or len(codon_splice_fragment) > 0:
@@ -192,28 +198,29 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
 
                 if nucleotide.isupper() and triplet_codon in STOP_CODONS:
                     volume = int(volume / 2)
-                    tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
+                    duration = 2
+                    (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
 
                     #longer (minor) chord to signify end of translation.
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
 
                     translation_completed = True
                     translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
 
                 else:
-                    tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+                    print(nucleotideIdx, "TRANSLATING")
+                    (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
                     midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
 
                     translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
 
             # we are in an exon, we have not begun translating, and we possibly encounter a start codon for the first time (depending on splicing)
             elif not translation_initiated and nucleotideIdx < len(nucleotides) - 2: 
-                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+2]
-
+                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+3]
                 # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
                 if not triplet_codon.isupper() or len(codon_splice_fragment) > 0: 
                     curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
@@ -239,13 +246,15 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
                 else:
                     nucleotideIdx += 3 # triplet_codon == "ATG"
 
+                print(nucleotideIdx, "BEGIN TRANSLATION")
                 volume = int(volume * 2)
-                tonic = change_key(tonic, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+                duration = 2
+                (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
 
                 #longer (major) chord to signify start of translation.
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration*2, volume)
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration*2, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
                 
                 translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
                 translation_initiated = True
@@ -260,6 +269,7 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
             nucleotideIdx += 1
                 
         time += duration
+        duration = 1
 
     translation_keys_file.close()
 
