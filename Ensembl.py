@@ -1,49 +1,120 @@
 import ensembl_rest
-import os, os.path
 import requests
 from requests.exceptions import HTTPError
 
-'''a module to obtain the DNA sequence (the coding strand) of a gene from Ensembl. Obtains FASTA-formatted text file exons (including 5' and 3' UTR) that are capitalized and introns in lower case'''
-def query_ensembl_sequence(species_scientific_name, gene_name):
-    '''queries the nucleotide sequence from Ensembl. Exons are in caps, introns lowercase. The sequence represents the coding strand of the DNA (i.e. matches RNA, 1-1 T-U valid substitution)'''
-    # id = ensembl_rest.symbol_lookup(
-    #     species=species_scientific_name,
-    #     symbol=gene_name
-    # ).get('id')
-
+def lookup_transcript(species_name, gene_name):
     data = ensembl_rest.symbol_lookup(
-        species=species_scientific_name,
+        species=species_name,
         symbol=gene_name,
         params={'expand':True}
     )
-    
+
     for entry in data['Transcript']:
         if entry['is_canonical']:
-            for exon in entry['Exon']:
-                print(exon)
-            break
-    # server = "https://rest.ensembl.org"
-    # ext = "/sequence/id/" + id + "?mask_feature=1" # mask_feature makes it so the exons are in caps and introns in lowercase
+            return (entry['Exon'], entry['id'])
+    return []
 
-    # ext1 = "/lookup/id/ENST00000269305.9?object_type=transcript;expand=1"
+def intron_coords(exons, i):
+    if exons[i]['strand'] == -1:
+        intron_start = str(exons[i+1]['end']+1)
+        intron_end = str(exons[i]['start']-1)
+    else:
+        intron_start = str(exons[i]['end']+1)
+        intron_end = str(exons[i+1]['start']-1)
 
-    # print(server+ext)
-    # try:
-    #     response = requests.get(server+ext, headers={ "Content-Type" : "text/x-fasta"})
-    #     response.raise_for_status()
-    #     return response
-    # except HTTPError as exc:
-    #     raise Exception(exc.response.status_code)
+    coords = str(exons[i]['seq_region_name'])+":"+intron_start+".."+intron_end+":"+str(exons[i]['strand'])
+    return coords
+
+def exon_coords(exon):
+    exon_start = str(exon['start'])
+    exon_end = str(exon['end'])
+
+    coords = str(exon['seq_region_name'])+":"+exon_start+".."+exon_end+":"+str(exon['strand'])
+    return coords
+
+def get_sequence_from_coords(coords):
+    server = "http://rest.ensembl.org"
+    generic_ext = "/sequence/region/human/"
+
+    try:
+        response = requests.get(server+generic_ext+coords, headers={"Content-Type": "text/plain"})
+        response.raise_for_status()
+        seq = response.text.split("\n", 1)[0]
+        return seq
+    except HTTPError as exc:
+        raise Exception(exc.response.status_code)
+
+def get_5prime_UTR_from_transcript_id(ID):
+    server = "http://rest.ensembl.org"
+    ext = "/sequence/id/" + ID + "?mask_feature=1;type=cdna"
+
+    def get_lowercase_prefix(input_str):
+        c = input_str[0]
+        idx = 1
+        res = ""
+        while idx < len(input_str) and c.islower(): 
+            res += c
+            c = input_str[idx]
+            idx += 1
+        return res
+
+    try:
+        response = requests.get(server+ext, headers={"Content-Type": "text/plain"})
+        response.raise_for_status()
+        seq = response.text.split("\n", 1)[0]
+        return get_lowercase_prefix(seq).upper()
+    except HTTPError as exc:
+        raise Exception(exc.response.status_code)
+
+def get_sequence_from_gene_id(species_name, gene_name):
+    (exons, canonical_transcript_id) = lookup_transcript(species_name, gene_name)
+    CDS_list = []
+    UTR_5prime_exons_list = []
+    UTR_5prime = get_5prime_UTR_from_transcript_id(canonical_transcript_id)
     
-def write_sequences_file_to_folder(class_name, class_folder_path, species_scientific_name, gene_name):
-    '''write the DNA sequence for the desired gene and species into a folder that has the name of the species' biological class'''
-    sequence = query_ensembl_sequence(species_scientific_name, gene_name).text
+    for i in range(0, len(exons) - 1):
+        iCoords = intron_coords(exons, i)
+        eCoords = exon_coords(exons[i])
 
-    if(not os.path.isdir(os.path.join(class_folder_path, class_name))):
-        os.mkdir(os.path.join(class_folder_path, class_name))
-    full_file_name = os.path.join(class_folder_path, class_name, species_scientific_name)  + ".txt"
+        exon_seq = get_sequence_from_coords(eCoords)
+        if UTR_5prime.startswith(exon_seq): # the entire exon is part of the 5' UTR
+            UTR_5prime_split_on_curr_exon = UTR_5prime.split(exon_seq)
+            UTR_5prime_exons_list.append(exon_seq)
+            UTR_5prime = ''.join(UTR_5prime_split_on_curr_exon[1:])
+            exon_seq = ""
+        elif len(UTR_5prime) > 0 and exon_seq.startswith(UTR_5prime): # part of the exon constitutes the last part of the 5' UTR
+            curr_exon_split_on_UTR_5prime = exon_seq.split(UTR_5prime)
+            UTR_5prime_exons_list.append(UTR_5prime + "X") # in post processing, X will signify the remainder of the exon, rather than an intron, comes next
+            exon_seq = ''.join(curr_exon_split_on_UTR_5prime[1:])
+            UTR_5prime = ""
+
+        intron_seq = get_sequence_from_coords(iCoords)
+
+        if len(exon_seq) > 0: # could be zero if entire exon is UTR, which we just stripped
+            CDS_list.append(exon_seq)
+        CDS_list.append(intron_seq)
+            
+    # create a header like >ENST00000412061.3.Intron_1 chromosome:GRCh38:17:43094861:43095845:-1
+    # use headline = ">"+t+".Intron_"+str(i+1) if you don't want the chromosomal position
+    # print(headline, sequence, sep="\n")
+
+    final_exon_coords = exon_coords(exons[len(exons) - 1])
+    final_exon_seq = get_sequence_from_coords(final_exon_coords)
+    CDS_list.append(final_exon_seq)
+
+    return (UTR_5prime_exons_list, CDS_list)
+
+# def write_sequences_file_to_folder(class_name, class_folder_path, species_scientific_name, gene_name):
+#     '''write the DNA sequence for the desired gene and species into a folder that has the name of the species' biological class'''
+#     sequence = query_ensembl_sequence(species_scientific_name, gene_name).text
+
+#     if(not os.path.isdir(os.path.join(class_folder_path, class_name))):
+#         os.mkdir(os.path.join(class_folder_path, class_name))
+#     full_file_name = os.path.join(class_folder_path, class_name, species_scientific_name)  + ".txt"
     
-    with open(full_file_name, 'w') as f:
-        f.write(sequence)
+#     with open(full_file_name, 'w') as f:
+#         f.write(sequence)
 
-query_ensembl_sequence("Homo sapiens", "TP53")
+# get_sequence_from_gene_id("ENSG00000141510")
+for entry in get_sequence_from_gene_id("Homo sapiens", "TP53"):
+    print(entry, "\n")
