@@ -14,7 +14,25 @@ def lookup_transcript(species_name, gene_name):
             return (entry['Exon'], entry['id'])
     return []
 
-def intron_coords(exons, i):
+def lookup_multiple_regions(regions):
+    server = "https://rest.ensembl.org"
+    ext = "/sequence/region/human"
+    headers={ "Content-Type" : "application/json", "Accept" : "application/json"}
+
+    try:
+        response = requests.post(server+ext, headers=headers, data='{ "regions" : ' + regions + ' }')
+        response.raise_for_status()
+        decoded = response.json()
+
+        regions = []
+        for entry in decoded:
+            regions.append(entry['seq'])
+
+        return regions
+    except HTTPError as exc:
+        raise Exception(exc.response.status_code)
+    
+def get_intron_coords(exons, i):
     if exons[i]['strand'] == -1:
         intron_start = str(exons[i+1]['end']+1)
         intron_end = str(exons[i]['start']-1)
@@ -25,14 +43,14 @@ def intron_coords(exons, i):
     coords = str(exons[i]['seq_region_name'])+":"+intron_start+".."+intron_end+":"+str(exons[i]['strand'])
     return coords
 
-def exon_coords(exon):
+def get_exon_coords(exon):
     exon_start = str(exon['start'])
     exon_end = str(exon['end'])
 
     coords = str(exon['seq_region_name'])+":"+exon_start+".."+exon_end+":"+str(exon['strand'])
     return coords
 
-def get_sequence_from_coords(coords):
+def lookup_single_region_from_coords(coords):
     server = "http://rest.ensembl.org"
     generic_ext = "/sequence/region/human/"
 
@@ -44,7 +62,7 @@ def get_sequence_from_coords(coords):
     except HTTPError as exc:
         raise Exception(exc.response.status_code)
 
-def get_5prime_UTR_from_transcript_id(ID):
+def lookup_5prime_UTR_from_transcript_id(ID):
     server = "http://rest.ensembl.org"
     ext = "/sequence/id/" + ID + "?mask_feature=1;type=cdna"
 
@@ -67,16 +85,25 @@ def get_5prime_UTR_from_transcript_id(ID):
         raise Exception(exc.response.status_code)
 
 def get_sequence_from_gene_id(species_name, gene_name):
-    (exons, canonical_transcript_id) = lookup_transcript(species_name, gene_name)
+    (exons_info_list, canonical_transcript_id) = lookup_transcript(species_name, gene_name)
     CDS_list = []
     UTR_5prime_exons_list = []
-    UTR_5prime = get_5prime_UTR_from_transcript_id(canonical_transcript_id)
-    
-    for i in range(0, len(exons) - 1):
-        iCoords = intron_coords(exons, i)
-        eCoords = exon_coords(exons[i])
+    UTR_5prime = lookup_5prime_UTR_from_transcript_id(canonical_transcript_id)
 
-        exon_seq = get_sequence_from_coords(eCoords)
+    exon_regions_coords = []
+    intron_regions_coords = []
+    for i in range(0, len(exons_info_list)):
+        exon_regions_coords.append(get_exon_coords(exons_info_list[i]))
+        if i < len(exons_info_list) - 1:
+            intron_regions_coords.append(get_intron_coords(exons_info_list, i))
+    
+    exon_regions = lookup_multiple_regions(str(exon_regions_coords).replace("\'", "\"" ))
+    intron_regions = lookup_multiple_regions(str(intron_regions_coords).replace("\'", "\"" ))
+
+    for i in range(0, len(exon_regions) - 1):
+        exon_seq = exon_regions[i]
+        intron_seq = intron_regions[i]
+
         if UTR_5prime.startswith(exon_seq): # the entire exon is part of the 5' UTR
             UTR_5prime_split_on_curr_exon = UTR_5prime.split(exon_seq)
             UTR_5prime_exons_list.append(exon_seq)
@@ -88,8 +115,6 @@ def get_sequence_from_gene_id(species_name, gene_name):
             exon_seq = ''.join(curr_exon_split_on_UTR_5prime[1:])
             UTR_5prime = ""
 
-        intron_seq = get_sequence_from_coords(iCoords)
-
         if len(exon_seq) > 0: # could be zero if entire exon is UTR, which we just stripped
             CDS_list.append(exon_seq)
         CDS_list.append(intron_seq)
@@ -98,8 +123,8 @@ def get_sequence_from_gene_id(species_name, gene_name):
     # use headline = ">"+t+".Intron_"+str(i+1) if you don't want the chromosomal position
     # print(headline, sequence, sep="\n")
 
-    final_exon_coords = exon_coords(exons[len(exons) - 1])
-    final_exon_seq = get_sequence_from_coords(final_exon_coords)
+    final_exon_coords = get_exon_coords(exons_info_list[-1])
+    final_exon_seq = lookup_single_region_from_coords(final_exon_coords)
     CDS_list.append(final_exon_seq)
 
     return (UTR_5prime_exons_list, CDS_list)
@@ -115,6 +140,6 @@ def get_sequence_from_gene_id(species_name, gene_name):
 #     with open(full_file_name, 'w') as f:
 #         f.write(sequence)
 
-# get_sequence_from_gene_id("ENSG00000141510")
+# get_sequence_from_gene_id("Homo sapiens", "TP53")
 for entry in get_sequence_from_gene_id("Homo sapiens", "TP53"):
     print(entry, "\n")
