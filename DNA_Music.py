@@ -23,27 +23,18 @@ directory tree.
     Then, in the same way as described above, classify organisms in the root directory into classes or get musicality scores by calling classify_species or get_species_musicality_score.
 '''
 
-def generate_single_midi_and_txt(folderpath, filename):
-    '''(used as helper function for write_nucleotides_and_generate_midi_txt_files. However, if you on your own create nucleotide .txt files through an instance of the NCBI class, 
-    you can generate the MIDI and musical keys .txt files on your own through this method. ASSUMES YOU ALREADAY HAVE NUCLEOTIDE .TXT FILES GENERATED. IF NOT USE write_nucleotides_and_generate_midi_txt_files. 
-    Description:
-    Generate the MIDI and .txt file of associated musical key changes for a given filename. This filename should represent a .txt file of 
-    nucleotides for a desired organism/species through the DNA_to_MIDI class.'''
-    full_file_name = os.path.join(folderpath, filename)
-    with open(full_file_name, 'r') as file:
-        nucleotides = file.read().replace('\n', '')
-        DNA_MIDI.add_notes(folderpath, filename[:-4], full_file_name, nucleotides)
-
 def write_nucleotides_and_generate_midi_txt_files(class_name, species_scientific_name, gene_name, class_folder_path = "."):
     '''runner function that takes in a class name, the scientific name for the desired species, the desired gene name, and optionally a class folder path 
     (if you don't want it to be created in the root directory. Creates an instance of the NCBI class, and then uses Biopython to access the NCBI (National Center for Biotechnology Information
     Then the user is asked to approve the DNA selection from the NCBI through terminal prompt, and once the data is approved, it is written to a .txt file with the species 
     scientific name to a folder with the class name. Then, the MIDI file and .txt file of musical key changes are generated for that DNA .txt file'''
-    if(not os.path.isdir(os.path.join(class_folder_path, class_name))):
-        os.mkdir(os.path.join(class_folder_path, class_name))
+    folder_path = os.path.join(class_folder_path, class_name)
+    full_file_name = os.path.join(folder_path, species_scientific_name + ".txt")
+    if(not os.path.isdir(folder_path)):
+        os.mkdir(folder_path)
         
-    Ensembl.write_sequences_file_to_folder(class_name, class_folder_path, species_scientific_name, gene_name)
-    generate_single_midi_and_txt(os.path.join(class_folder_path, class_name), species_scientific_name + ".txt")
+    (UTR_5prime_exons_list, CDS_list) = Ensembl.get_sequence(species_scientific_name, gene_name)
+    DNA_MIDI.add_notes(folder_path, species_scientific_name, full_file_name, UTR_5prime_exons_list, CDS_list)
 
 def classify_species(organism_scientific_name):
     '''runner function that classifies a given species into a class (e.g. "Mammals"). Creates an instance of the Harmonic_Sequences class to get the harmonic sequences list (percent of DNA corresponding to 

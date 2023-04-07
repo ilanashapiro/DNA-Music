@@ -93,6 +93,13 @@ AMINO_ACIDS = { #essential
                 "TAG":"E",
                 "TGA":"G" }
 
+COMPLEMENT = {
+    "A":"T",
+    "T":"A",
+    "C":"G",
+    "G":"C",
+}
+
 def change_key(curr_tonic, curr_tonic_note_name, new_key, isMajor, dna_to_chromatic_dict):
     '''changes the key given a new key and a mode (major or minor). The intervallic distance between the root of the current key and the root of the new key (e.g. C and A) is determined, 
     and, along with the mode, the tonic, mediant, and dominant notes of the new key (which are the 3 notes of the major/minor triad of that key) are determined'''
@@ -125,9 +132,19 @@ def change_key(curr_tonic, curr_tonic_note_name, new_key, isMajor, dna_to_chroma
 
     return (new_tonic, tonic_note_name, mediant_note_name, dominant_note_name)
 
-    
-
-def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
+def process_UTR_frag(UTR_frag, midi_file, track_num, dna_to_chromatic_dict, time, duration, volume):
+    # returns (time, is_incomplete_exon) --> the second part is only relevent if the UTR is 5'
+    # in which case, this the last part of the 5' frag that is only part of the exon and is followed by ATG....
+    # if so, the last char in this sequence is marked as X
+    for nucleotide in UTR_frag:
+        if nucleotide == 'X':
+            return (time, True)
+        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide.upper()]], time, duration, volume)
+        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[COMPLEMENT[nucleotide].upper()]], time, duration, volume)
+        time += duration
+    return (time, False)
+        
+def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CDS_list):
     '''adds notes to the MIDI file. Initial key is always C minor. Before the start codon AUG is encountered, individual nucleotides outline
     the 3 notes of minor triad (base pairs form dyads, or 2-note chords). Then, during translation, the key is major and the volume doubles. The
     key is determined by the codon (see the AMINO_ACIDS dictionary above). Individual nucleotides no longer determine the notes; this is now dictated
@@ -137,9 +154,6 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
 
     '''create_track creates the specified track of the midi file with the above parameters specified. Nucleotides refers to the string
     of DNA nucleotides for the desired organism and gene to be turned into music'''
-
-    if nucleotides == None:
-        raise Exception("Be sure to pass in nucleotides!")
 
     tonic_note_name = "C"
     mediant_note_name = "Eb"
@@ -151,7 +165,6 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
     dna_to_chromatic_dict["T"] = mediant_note_name
     dna_to_chromatic_dict["G"] = dominant_note_name	
 
-    nucleotides_complement = get_sequence_complement(nucleotides)
     volume = 50
     duration = 1
     time = 0
@@ -164,112 +177,117 @@ def add_notes(folder_name, track_name, full_file_name, nucleotides=None):
 
     translation_keys_file = open(os.path.join(folder_name, track_name + '_translation_keys.txt'), 'w') #create file to write the keys to during translation
 
-    nucleotideIdx = 0
+    UTR_frag_index = 0
     translation_initiated = False
     translation_completed = False
     codon_splice_fragment = ""
 
-    while nucleotideIdx < len(nucleotides):
-        nucleotide = nucleotides[nucleotideIdx]
-        base_pair = nucleotides_complement[nucleotideIdx]
+    for region in CDS_list:
+        if UTR_frag_index < len(UTR_5prime_exons_list):
+            time = process_UTR_frag(UTR_5prime_exons_list[UTR_frag_index], midi_file, track_num, dna_to_chromatic_dict, time, duration, volume)
+            UTR_frag_index += 1
+        nucleotideIdx = 0
+        
+        while nucleotideIdx < len(region):
+            nucleotide = region[nucleotideIdx]
+            base_pair = COMPLEMENT[nucleotide]
 
-        if nucleotide.isupper():
-            # we are in the middle of translation
-            if translation_initiated and not translation_completed:
-                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+3] # should never go out of bounds since the data should always contain a stop codon
-                print(triplet_codon)
-                # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
-                if not triplet_codon.isupper() or len(codon_splice_fragment) > 0:
-                    print(codon_splice_fragment)
-                    curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
-                    remaining_length_in_codon = 3 - len(codon_splice_fragment)
-                    
-                    # if this is the latter part of the spliced codon (i.e. we have something like AaAAaaa and we are at the second capital A, and then codon_splice_fragment="AA")
-                    # accounting for the case of something like AaAaAaa in which we need to continue on to the next exon in order to splice together the entire codon
-                    if len(curr_exon_codon_frag) < remaining_length_in_codon: 
-                        codon_splice_fragment += curr_exon_codon_frag
-                        nucleotideIdx += len(curr_exon_codon_frag)
-                        continue
-                    else:
-                        triplet_codon = codon_splice_fragment + curr_exon_codon_frag[0:remaining_length_in_codon]
-                        codon_splice_fragment = ""
-                        nucleotideIdx += remaining_length_in_codon
-                else:
-                    nucleotideIdx += 3
-
-                if nucleotide.isupper() and triplet_codon in STOP_CODONS:
-                    volume = int(volume / 2)
-                    duration = 2
-                    (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
-
-                    #longer (minor) chord to signify end of translation.
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
-
-                    translation_completed = True
-                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-
-                else:
-                    (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
-
-                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-
-            # we are in an exon, we have not begun translating, and we possibly encounter a start codon for the first time (depending on splicing)
-            elif not translation_initiated and nucleotideIdx < len(nucleotides) - 2: 
-                triplet_codon = nucleotides[nucleotideIdx:nucleotideIdx+3]
-                # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
-                if not triplet_codon.isupper() or len(codon_splice_fragment) > 0: 
-                    curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
-                    remaining_length_in_codon = 3 - len(codon_splice_fragment)
-                    
-                    # if this is the latter part of the spliced codon (i.e. we have something like AaAAaaa and we are at the second capital A, and then codon_splice_fragment="AA")
-                    # accounting for the case of something like AaAaAaa in which we need to continue on to the next exon in order to splice together the entire codon
-                    if len(curr_exon_codon_frag) < remaining_length_in_codon: 
-                        codon_splice_fragment += curr_exon_codon_frag
-                        nucleotideIdx += len(curr_exon_codon_frag)
-                        continue
-                    else:
-                        triplet_codon = codon_splice_fragment + curr_exon_codon_frag[0:remaining_length_in_codon]
-                        codon_splice_fragment = ""
-                        if triplet_codon != "ATG":
-                            nucleotideIdx += remaining_length_in_codon
+            if nucleotide.isupper():
+                # we are in the middle of translation
+                if translation_initiated and not translation_completed:
+                    triplet_codon = region[nucleotideIdx:nucleotideIdx+3] # should never go out of bounds since the data should always contain a stop codon
+                    print(triplet_codon)
+                    # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
+                    if not triplet_codon.isupper() or len(codon_splice_fragment) > 0:
+                        print(codon_splice_fragment)
+                        curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
+                        remaining_length_in_codon = 3 - len(codon_splice_fragment)
+                        
+                        # if this is the latter part of the spliced codon (i.e. we have something like AaAAaaa and we are at the second capital A, and then codon_splice_fragment="AA")
+                        # accounting for the case of something like AaAaAaa in which we need to continue on to the next exon in order to splice together the entire codon
+                        if len(curr_exon_codon_frag) < remaining_length_in_codon: 
+                            codon_splice_fragment += curr_exon_codon_frag
+                            nucleotideIdx += len(curr_exon_codon_frag)
                             continue
                         else:
-                            nucleotideIdx += 3 # triplet_codon == "ATG" after combining from previous splice
-                elif triplet_codon != "ATG":
-                    nucleotideIdx += 1
-                    continue
+                            triplet_codon = codon_splice_fragment + curr_exon_codon_frag[0:remaining_length_in_codon]
+                            codon_splice_fragment = ""
+                            nucleotideIdx += remaining_length_in_codon
+                    else:
+                        nucleotideIdx += 3
+
+                    if nucleotide.isupper() and triplet_codon in STOP_CODONS:
+                        volume = int(volume / 2)
+                        duration = 2
+                        (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], False, dna_to_chromatic_dict) 
+
+                        #longer (minor) chord to signify end of translation.
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
+
+                        translation_completed = True
+                        translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+
+                    else:
+                        (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
+
+                        translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+
+                # we are in an exon, we have not begun translating, and we possibly encounter a start codon for the first time (depending on splicing)
+                elif not translation_initiated and nucleotideIdx < len(region) - 2: 
+                    triplet_codon = region[nucleotideIdx:nucleotideIdx+3]
+                    # if we are dealing with either side of the divide of a splice region (incomplete codon spread over multiple exons due to introns dividing it) 
+                    if not triplet_codon.isupper() or len(codon_splice_fragment) > 0: 
+                        curr_exon_codon_frag = get_uppercase_prefix(triplet_codon)
+                        remaining_length_in_codon = 3 - len(codon_splice_fragment)
+                        
+                        # if this is the latter part of the spliced codon (i.e. we have something like AaAAaaa and we are at the second capital A, and then codon_splice_fragment="AA")
+                        # accounting for the case of something like AaAaAaa in which we need to continue on to the next exon in order to splice together the entire codon
+                        if len(curr_exon_codon_frag) < remaining_length_in_codon: 
+                            codon_splice_fragment += curr_exon_codon_frag
+                            nucleotideIdx += len(curr_exon_codon_frag)
+                            continue
+                        else:
+                            triplet_codon = codon_splice_fragment + curr_exon_codon_frag[0:remaining_length_in_codon]
+                            codon_splice_fragment = ""
+                            if triplet_codon != "ATG":
+                                nucleotideIdx += remaining_length_in_codon
+                                continue
+                            else:
+                                nucleotideIdx += 3 # triplet_codon == "ATG" after combining from previous splice
+                    elif triplet_codon != "ATG":
+                        nucleotideIdx += 1
+                        continue
+                    else:
+                        nucleotideIdx += 3 # triplet_codon == "ATG"
+
+                    volume = int(volume * 2)
+                    duration = 2
+                    (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
+
+                    #longer (major) chord to signify start of translation.
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
+                    midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
+                    
+                    translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
+                    translation_initiated = True
+
+                # we are in either the 5' or 3' UTR of an exon
                 else:
-                    nucleotideIdx += 3 # triplet_codon == "ATG"
+                    nucleotideIdx += 1
 
-                print("START ", triplet_codon)
-                volume = int(volume * 2)
-                duration = 2
-                (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], True, dna_to_chromatic_dict)
-
-                #longer (major) chord to signify start of translation.
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
-                
-                translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
-                translation_initiated = True
-
-            # we are in either the 5' or 3' UTR of an exon
-            else:
+            else: # lowercase, we are in an intron
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide.upper()]], time, duration, volume)
+                midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair.upper()]], time, duration, volume)
                 nucleotideIdx += 1
-
-        else: # lowercase, we are in an intron
-            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide.upper()]], time, duration, volume)
-            midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair.upper()]], time, duration, volume)
-            nucleotideIdx += 1
-                
-        time += duration
-        duration = 1
+                    
+            time += duration
+            duration = 1
 
     translation_keys_file.close()
 

@@ -50,6 +50,7 @@ def get_exon_coords(exon):
     coords = str(exon['seq_region_name'])+":"+exon_start+".."+exon_end+":"+str(exon['strand'])
     return coords
 
+# DEPRECATED -- now using optimized multi-region query
 def lookup_single_region_from_coords(coords):
     server = "http://rest.ensembl.org"
     generic_ext = "/sequence/region/human/"
@@ -84,7 +85,7 @@ def lookup_5prime_UTR_from_transcript_id(ID):
     except HTTPError as exc:
         raise Exception(exc.response.status_code)
 
-def get_sequence_from_gene_id(species_name, gene_name):
+def get_sequence(species_name, gene_name):
     (exons_info_list, canonical_transcript_id) = lookup_transcript(species_name, gene_name)
     CDS_list = []
     UTR_5prime_exons_list = []
@@ -140,6 +141,6 @@ def get_sequence_from_gene_id(species_name, gene_name):
 #     with open(full_file_name, 'w') as f:
 #         f.write(sequence)
 
-# get_sequence_from_gene_id("Homo sapiens", "TP53")
-for entry in get_sequence_from_gene_id("Homo sapiens", "TP53"):
+# get_sequence("Homo sapiens", "TP53")
+for entry in get_sequence("Homo sapiens", "TP53"):
     print(entry, "\n")
