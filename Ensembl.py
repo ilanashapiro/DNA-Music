@@ -142,6 +142,6 @@ def get_sequence(species_name, gene_name):
 #         f.write(sequence)
 
 # get_sequence("Homo sapiens", "TP53")
-print("HERE")
-for entry in get_sequence("Homo sapiens", "TP53"):
-    print(entry, "\n")
+
+# for entry in get_sequence("Homo sapiens", "TP53"):
+#     print(entry, "\n")

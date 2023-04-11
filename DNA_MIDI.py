@@ -199,18 +199,16 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                 if translation_initiated and not translation_completed:
                     if nucleotideIdx == 0 and remaining_length_in_codon > 0: # if we're in a new exon and the codon began in the previous region (end of splice)
                         prev_exon = CDS_list[regionIdx - 2] # bc the next region in the list is an intron
-                        initial_codon_frag_length =  3 - remaining_length_in_codon
+                        initial_codon_frag_length = 3 - remaining_length_in_codon
                         initial_codon_frag = prev_exon[-initial_codon_frag_length:]
                         remaining_codon_frag = region[:remaining_length_in_codon]
                         triplet_codon = initial_codon_frag + remaining_codon_frag
                         nucleotideIdx += remaining_length_in_codon
                         remaining_length_in_codon = 0
-                        print(triplet_codon)
                         # is_spliced remains true from the else clause
-                    elif nucleotideIdx < len(region) - 3: # normal codon
+                    elif nucleotideIdx < len(region) - 2: # normal codon
                         triplet_codon = region[nucleotideIdx:nucleotideIdx+3]
                         nucleotideIdx += 3
-                        print()
                         is_spliced = False
                     else: # the codon begins across a splice region
                         initial_codon_frag = region[nucleotideIdx:len(region)]
@@ -219,7 +217,6 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                         remaining_codon_frag = next_exon[:remaining_length_in_codon]
                         triplet_codon = initial_codon_frag + remaining_codon_frag
                         nucleotideIdx = len(region)
-                        print(triplet_codon)
                         is_spliced = True
 
                     if not start_codon_encountered: # i.e. we're just beginning translation, the next codon should be ATG or the file is corrupt
@@ -254,15 +251,15 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                         time += duration
                         
                         # process the remainder of the exon as 3' UTR
+                        duration = 1
                         time = process_UTR_frag(region[nucleotideIdx:], midi_file, track_num, dna_to_chromatic_dict, time, duration, volume)
                         nucleotideIdx = len(region)
                     else: # we are actively translating
-                        volume = 50
+                        volume = 100
                         duration = 0.5 if is_spliced else 1
 
                         (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], ChordQuality.MAJOR, dna_to_chromatic_dict)
 
-                        #longer (major) chord to signify start of translation.
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
@@ -275,7 +272,9 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                     time = process_UTR_frag(region, midi_file, track_num, dna_to_chromatic_dict, time, duration, volume)
                     nucleotideIdx += 1 # since individual nucleotides, rather than codons, dictate the harmony here
 
-            else: # we are in a UTR
+            else: # we are in an intron
+                duration = 1
+                volume = 50
                 (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, tonic_note_name, ChordQuality.DIMINISHED, dna_to_chromatic_dict)
                 midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide.upper()]], time, duration, volume)
                 midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair.upper()]], time, duration, volume)
