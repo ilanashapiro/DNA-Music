@@ -109,19 +109,14 @@ COMPLEMENT = {
 def change_key(curr_tonic, curr_tonic_note_name, new_key, chord_quality, dna_to_chromatic_dict):
     '''changes the key given a new key and a mode (major or minor). The intervallic distance between the root of the current key and the root of the new key (e.g. C and A) is determined, 
     and, along with the mode, the tonic, mediant, and dominant notes of the new key (which are the 3 notes of the major/minor triad of that key) are determined'''
-    semitones_up_scale = abs(PITCH_DICTIONARY[curr_tonic_note_name] - PITCH_DICTIONARY[new_key])
-    new_tonic = curr_tonic + semitones_up_scale 
-    if new_tonic >= len(KEYS):
-        new_tonic = new_tonic - len(KEYS)
+    
+    semitones_diff = PITCH_DICTIONARY[curr_tonic_note_name] - PITCH_DICTIONARY[new_key]
+    semitones_up_scale = abs(semitones_diff) if semitones_diff < 0 else len(KEYS) - semitones_diff
 
-    mediant = new_tonic + 4 if chord_quality == ChordQuality.MAJOR else 3
-    if mediant >= len(KEYS):
-        mediant = mediant - len(KEYS) 
-   
-    dominant = new_tonic + 6 if chord_quality == ChordQuality.DIMINISHED else 7
-    if dominant >= len(KEYS):
-        dominant = dominant - len(KEYS)
-
+    new_tonic = (curr_tonic + semitones_up_scale) % len(KEYS)
+    mediant = (new_tonic + (4 if chord_quality == ChordQuality.MAJOR else 3)) % len(KEYS) 
+    dominant = (new_tonic + (6 if chord_quality == ChordQuality.DIMINISHED else 7)) % len(KEYS) 
+    
     tonic_note_name = KEYS[new_tonic]
     mediant_note_name = KEYS[mediant]
     dominant_note_name = KEYS[dominant]
@@ -188,7 +183,7 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
 
     for regionIdx, region in enumerate(CDS_list):
         if UTR_frag_index < len(UTR_5prime_exons_list):
-            time = process_UTR_frag(UTR_5prime_exons_list[UTR_frag_index], midi_file, track_num, dna_to_chromatic_dict, time, duration, volume)
+            time = process_UTR_frag(UTR_5prime_exons_list[UTR_frag_index], midi_file, track_num, dna_to_chromatic_dict, time, 1, volume)
             UTR_frag_index += 1
             if UTR_frag_index == len(UTR_5prime_exons_list): # translation begins when we finish the UTR
                 translation_initiated = True
@@ -210,10 +205,12 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                         triplet_codon = initial_codon_frag + remaining_codon_frag
                         nucleotideIdx += remaining_length_in_codon
                         remaining_length_in_codon = 0
+                        print(triplet_codon)
                         # is_spliced remains true from the else clause
                     elif nucleotideIdx < len(region) - 3: # normal codon
                         triplet_codon = region[nucleotideIdx:nucleotideIdx+3]
                         nucleotideIdx += 3
+                        print()
                         is_spliced = False
                     else: # the codon begins across a splice region
                         initial_codon_frag = region[nucleotideIdx:len(region)]
@@ -222,6 +219,7 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                         remaining_codon_frag = next_exon[:remaining_length_in_codon]
                         triplet_codon = initial_codon_frag + remaining_codon_frag
                         nucleotideIdx = len(region)
+                        print(triplet_codon)
                         is_spliced = True
 
                     if not start_codon_encountered: # i.e. we're just beginning translation, the next codon should be ATG or the file is corrupt
@@ -243,6 +241,7 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                     elif triplet_codon in STOP_CODONS:
                         volume = 50
                         duration = 0.5 if is_spliced else 2 
+                        
                         (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], ChordQuality.MINOR, dna_to_chromatic_dict) 
                         
                         #longer (minor) chord to signify end of translation.
@@ -260,6 +259,7 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                     else: # we are actively translating
                         volume = 50
                         duration = 0.5 if is_spliced else 1
+
                         (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], ChordQuality.MAJOR, dna_to_chromatic_dict)
 
                         #longer (major) chord to signify start of translation.
@@ -282,6 +282,8 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                 midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[get_submediant_note_name(tonic)], time, duration, volume)
                 nucleotideIdx += 1
                 time += duration
+
+            duration = 1
 
     write_to_disk(full_file_name, midi_file)
 
