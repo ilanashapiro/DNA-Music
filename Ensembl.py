@@ -112,12 +112,12 @@ def get_sequence(species_name, gene_name):
             exon_seq = ""
         elif len(UTR_5prime) > 0 and exon_seq.startswith(UTR_5prime): # part of the exon constitutes the last part of the 5' UTR
             curr_exon_split_on_UTR_5prime = exon_seq.split(UTR_5prime)
-            UTR_5prime_exons_list.append(UTR_5prime + "X") # in post processing, X will signify the remainder of the exon, rather than an intron, comes next
+            UTR_5prime_exons_list.append(UTR_5prime)
             exon_seq = ''.join(curr_exon_split_on_UTR_5prime[1:])
             UTR_5prime = ""
 
-        if len(exon_seq) > 0: # could be zero if entire exon is UTR, which we just stripped
-            CDS_list.append(exon_seq)
+        # exon_seq could be emptry str if entire exon is UTR, which we just stripped, but we need it as placeholder so exon indexing in the list holds
+        CDS_list.append(exon_seq)  
         CDS_list.append(intron_seq)
             
     # create a header like >ENST00000412061.3.Intron_1 chromosome:GRCh38:17:43094861:43095845:-1
@@ -142,5 +142,6 @@ def get_sequence(species_name, gene_name):
 #         f.write(sequence)
 
 # get_sequence("Homo sapiens", "TP53")
+print("HERE")
 for entry in get_sequence("Homo sapiens", "TP53"):
     print(entry, "\n")
