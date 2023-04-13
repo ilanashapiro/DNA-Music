@@ -10,6 +10,8 @@
 \usepackage{courier}
 \usepackage{amsmath}
 \usepackage{musicography}
+\usepackage{graphicx}
+\usepackage[font=small,skip=0pt]{caption}
 
 \pdfinfo{
 /Title (Formatting Instructions for Authors)
@@ -17,7 +19,7 @@
 /Author (ICCC)}
 % The file iccc.sty is the style file for ICCC proceedings.
 %
-\title{Listening to Biological Translation: Converting RNA to Music}
+\title{Converting DNA to Music: Sonifying Splicing and Translation}
 \author{Ilana Shapiro\\
 Computer Science Department\\
 Pomona College\\
@@ -29,7 +31,7 @@ issa2018@mymail.pomona.edu\\
 \begin{document} 
 \maketitle
 \begin{abstract}
-The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting RNA to musical data in the form of MIDI piano chords. Genetic material from a variety of species is sourced from Nucleotide, a database of the NCBI's molecular biology database system Entrez. Then, codons inform the harmony in protein-coding regions, while individual nucleotides dictate chords in non-coding regions. Local keys are determined by amino acids in the protein-coding regions and carry over into the non-coding regions. Finally, an analysis of harmonic sequences in the resulting MIDI files is presented, as well as an attempt to classify species into the correct biological class based on this data. By mapping nucleotides and codons to chords and analyzing genetic material as music, BioMus thus gives scientists the means to uniquely conceptualize the process of biological translation.
+The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting DNA to musical data in the form of MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and their CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in a CDS region is mapped to a major chord, individual nucleotides in introns are mapped to diminished chords, and individual nucleotides in UTRs are mapped to minor chords. CDS codons are mapped to chords based on the amino acids they code for, and rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are also at a higher volume. By mapping nucleotides and codons to chords and analyzing genetic material as music, BioMus thus gives scientists a novel means to conceptualize the process of biological splicing and translation.
 
 ONE PARAGRAPH, max 250words
 \end{abstract}
@@ -40,8 +42,32 @@ ONE PARAGRAPH, max 250words
 
 Ingalls et al. present 
 
-\section{Converting RNA to Music}
-BioMus's process of RNA sonification begins with the user specifying a desired species and gene, as well as the species' biological class. The species and gene are passed to the Biopython library to obtain the associated DNA sequence from Nucleotide, a database providing DNA and RNA sequences that is part of the NCBI's molecular biology database system Entrez. The resulting DNA is written to a text file in FASTA format, a standard textual format in bioinformatics in which nucleotides are represented with single characters corresponding to their bases. The file is placed inside a folder with the species' class name.
+\section{Converting DNA to Music}
+\subsection{Obtaining Genetic Data}
+BioMus's process of DNA sonification begins with the user specifying a desired species and gene. This information is passed to Ensembl's REST API to obtain Ensembl's choromomal coordinates of the gene's exons. These coordinates are sourced from the gene's \textit{canonical transcript}, the gene's transcript in Ensembl that is overall the most conserved and highly expressed, has the longest CDS, and is also represented in other major databases such as the NCBI \cite{ensembl_transcript_flags}. The exon coordinates also define the chromosomal coordinates of the intervening introns. Each pair of exon and intron coordinates is passed back to the Ensembl REST API to obtain the nucleotide sequences for each region, and the result is a list of sequence regions alternating exons and introns. For instance, consider the abbreviated sequence obtained from Ensembl for the \textit{Homo sapiens} (human) TP53 tumor suppressor gene in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. Ellipses indicate omitted nucleotides for the sake of example.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.48\textwidth]{images/pre_processed_seq_homo_sapiens_tp53_ABBREV}
+  \caption{Homo sapiens}\label{fig:pre_processed_seq_homo_sapiens_tp53}
+  \vspace{-3mm}
+\end{figure}
+
+Exons are in color, while introns are in grey. Within the exons, the orange regions are the UTRs, and the blue regions are the CDS. Notice how the CDS begins with the bolded start codon ATG and ends with the bolded stop codon TGA. 
+
+Now, the goal is to extract the 5' UTR from the list. In order to ensure the correct CDS, is necessary to verify the 5' UTR with Ensemble, since it may include multiple ATG start codons that do not signal the start of the CDS. This is not necessary for the 3' UTR, since once we know we are in the CDS, the first stop codon will always signal the end of the CDS and the beginning of the 3' UTR. We obtain the 5' UTR from Ensembl by querying the Ensembl REST API for the cDNA (complementary DNA) sequence of the canonical transcript. cDNA is identical to the CDS, but includes the UTRs \cite{ensembl_glossary}. By requesting Ensembl to ``mask" the UTRs of the cDNA sequence by representing them in lowercase, we can successfully isolate the 5' UTR and extract it from the list in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. As seen in Figure \ref{fig:post_processed_seq_homo_sapiens_tp53}, we end up with a list of the 5' UTR regions (top), and a list of the CDS regions and introns (bottom).\cite{10.1162/artl_a_00325}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.48\textwidth]{images/post_processed_seq_homo_sapiens_tp53_ABBREV}
+\vspace{-3mm}
+  \caption{Homo sapiens}\label{fig:post_processed_seq_homo_sapiens_tp53}
+  \vspace{-3mm}
+\end{figure}
+
+We now have all the tools necessary to translate the genetic data into music.
+
+\subsection{Conversion to MIDI}
 
 Next, a MIDI track is created using the MIDIUtil library with the tempo set to \musQuarter\;= 200 BPM, and the DNA sequence is transcribed to RNA with Biopython. Recall the bases used in RNA are adenine (A), cytosine (C), guanine (G) and uracil (U), and have the pairings C-G and A-U. BioMus defines the following mapping of individual bases to musical notes relative to the local key in Table  \ref{table:nucleotides}.
 
@@ -125,13 +151,8 @@ UGA & G \\ \hline
 \caption{Stop Codons}
 \label{table:stop_codons}
 \end{table}
-\subsection{Obtaining Genetic Data}
 
-\subsection{Conversion to MIDI}
-
-\section{Analyzing MIDI for Harmonic Sequences}
-
-\section{Classification and Musicality of Species}
+\section{Sample Music}
 
 \section{Conclusion}
 BioMus serves as a bridge between bioinformatics, computer science, and music by giving scientists the creative means to 

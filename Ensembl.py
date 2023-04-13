@@ -14,16 +14,15 @@ def lookup_transcript(species_name, gene_name):
             return (entry['Exon'], entry['id'])
     return []
 
-def lookup_multiple_regions(regions):
+def lookup_multiple_regions(regions, species):
     server = "https://rest.ensembl.org"
-    ext = "/sequence/region/human"
+    ext = "/sequence/region/" + species
     headers={ "Content-Type" : "application/json", "Accept" : "application/json"}
 
     try:
         response = requests.post(server+ext, headers=headers, data='{ "regions" : ' + regions + ' }')
         response.raise_for_status()
         decoded = response.json()
-
         regions = []
         for entry in decoded:
             regions.append(entry['seq'])
@@ -87,20 +86,21 @@ def lookup_5prime_UTR_from_transcript_id(ID):
 
 def get_sequence(species_name, gene_name):
     (exons_info_list, canonical_transcript_id) = lookup_transcript(species_name, gene_name)
+
     CDS_list = []
     UTR_5prime_exons_list = []
     UTR_5prime = lookup_5prime_UTR_from_transcript_id(canonical_transcript_id)
-
+    
     exon_regions_coords = []
     intron_regions_coords = []
     for i in range(0, len(exons_info_list)):
         exon_regions_coords.append(get_exon_coords(exons_info_list[i]))
         if i < len(exons_info_list) - 1:
             intron_regions_coords.append(get_intron_coords(exons_info_list, i))
-    
-    exon_regions = lookup_multiple_regions(str(exon_regions_coords).replace("\'", "\"" ))
-    intron_regions = lookup_multiple_regions(str(intron_regions_coords).replace("\'", "\"" ))
 
+    exon_regions = lookup_multiple_regions(str(exon_regions_coords).replace("\'", "\"" ), species_name.replace(" ", "_" ))
+    intron_regions = lookup_multiple_regions(str(intron_regions_coords).replace("\'", "\"" ), species_name.replace(" ", "_" ))
+    
     for i in range(0, len(exon_regions) - 1):
         exon_seq = exon_regions[i]
         intron_seq = intron_regions[i]
@@ -141,7 +141,7 @@ def get_sequence(species_name, gene_name):
 #     with open(full_file_name, 'w') as f:
 #         f.write(sequence)
 
-# get_sequence("Homo sapiens", "TP53")
+# get_sequence("Danio rerio", "TP53")
 
-# for entry in get_sequence("Homo sapiens", "TP53"):
+# for entry in get_sequence("Zebrafish", "TP53"):
 #     print(entry, "\n")

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  3 APR 2023 15:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  13 APR 2023 15:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -152,34 +152,116 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \@centerbox=\box58
 \c@ROWcellindex@=\count279
 ))
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 2
-9.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen150
+\Gin@req@width=\dimen151
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen152
+\captionmargin=\dimen153
+\caption@leftmargin=\dimen154
+\caption@rightmargin=\dimen155
+\caption@width=\dimen156
+\caption@indent=\dimen157
+\caption@parindent=\dimen158
+\caption@hangindent=\dimen159
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count280
+\c@continuedfloat=\count281
+)
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 3
+1.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 ) (./iccc.aux)
 \openout1 = `iccc.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
 
+(/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count282
+\scratchdimen=\dimen160
+\scratchbox=\box59
+\nofMPsegments=\count283
+\nofMParguments=\count284
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count285
+\MPscratchDim=\dimen161
+\MPnumerator=\count286
+\makeMPintoPDFobject=\count287
+\everyMPtoPDFconversion=\toks23
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+<images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png, id=1, 593.21625pt x 250
+.9375pt>
+File: images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type 
+png)
+<use images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png>
+Package pdftex.def Info: images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png 
+ used on input line 51.
+(pdftex.def)             Requested size: 242.82503pt x 102.71655pt.
 
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 51--52
+ [][] 
+ []
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+<images/post_processed_seq_homo_sapiens_tp53_ABBREV.png, id=3, 593.21625pt x 31
+8.18875pt>
+File: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type
+ png)
+<use images/post_processed_seq_homo_sapiens_tp53_ABBREV.png>
+Package pdftex.def Info: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png
+  used on input line 62.
+(pdftex.def)             Requested size: 242.82503pt x 130.2446pt.
+
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 62--64
+ [][] 
+ []
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -188,28 +270,36 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 
-]
-No file iccc.bbl.
-[2
+ <./images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png>]
 
-] (./iccc.aux) ) 
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+(./iccc.bbl) [2 <./images/post_processed_seq_homo_sapiens_tp53_ABBREV.png>]
+(./iccc.aux) ) 
 Here is how much of TeX's memory you used:
- 2295 strings out of 478268
- 36898 string characters out of 5846346
- 346167 words of memory out of 5000000
- 20510 multiletter control sequences out of 15000+600000
- 481804 words of font info for 48 fonts, out of 8000000 for 9000
+ 4460 strings out of 478268
+ 76351 string characters out of 5846346
+ 389335 words of memory out of 5000000
+ 22632 multiletter control sequences out of 15000+600000
+ 483488 words of font info for 50 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,14n,77p,1154b,264s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc
-}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.
-pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix
-16.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></u
-sr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on iccc.pdf (2 pages, 55473 bytes).
+ 68i,14n,77p,1378b,317s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc}<
+/usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.pf
+b></usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix16
+.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr
+/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/tex
+live/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on iccc.pdf (2 pages, 271120 bytes).
 PDF statistics:
- 32 PDF objects out of 1000 (max. 8388607)
- 19 compressed objects within 1 object stream
+ 42 PDF objects out of 1000 (max. 8388607)
+ 23 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

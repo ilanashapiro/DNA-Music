@@ -1,0 +1,23 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Ensembl}{2023a}]{ensembl_glossary}
+Ensembl.
+\newblock 2023a.
+\newblock {Ensembl Glossary}.
+\newblock {\em European Molecular Biology Laboratory - European Bioinformatics
+  Institute}.
+
+\bibitem[\protect\citeauthoryear{Ensembl}{2023b}]{ensembl_transcript_flags}
+Ensembl.
+\newblock 2023b.
+\newblock {Transcript flags}.
+\newblock {\em European Molecular Biology Laboratory - European Bioinformatics
+  Institute}.
+
+\bibitem[\protect\citeauthoryear{Miranda}{2020}]{10.1162/artl_a_00325}
+Miranda, E.~R.
+\newblock 2020.
+\newblock {Genetic Music System with Synthetic Biology}.
+\newblock {\em Artificial Life} 26(3):366--390.
+
+\end{thebibliography}

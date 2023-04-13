@@ -42,11 +42,13 @@ class_species_dict_TP53 = {
     "Aves":["Gallus gallus", "Anas platyrhynchos", "Haliaeetus leucocephalus", "Lonchura striata domestica", "Taeniopygia guttata", "Pseudopodoces humilis", "Sturnus vulgaris"],
     "Testudines":["Dermochelys coriacea", "Caretta caretta", "Chelonia mydas", "Mauremys reevesii", "Mauremys mutica", "Terrapene carolina triunguis", "Chelonoidis abingdonii"]
 }
-write_nucleotides_and_generate_midi_txt_files("Mammalia", "Homo sapiens", "TP53")
+write_nucleotides_and_generate_midi_txt_files("Mammalia", "Mouse", "TP53")
 num_classified_correctly = 0
 total_species = 0
 highest_musicality_score = 0
 highest_musicality_species = ""
+musicality_score = get_species_musicality_score("Mammalia" + "/" + "Homo sapiens")
+print(musicality_score)
 # for (class_name, species_list) in class_species_dict_TP53.items():
 #     for species in species_list:
 #         # write_nucleotides_and_generate_midi_txt_files(class_name, species, "TP53")
