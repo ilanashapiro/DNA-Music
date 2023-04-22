@@ -11,7 +11,7 @@
 \usepackage{amsmath}
 \usepackage{musicography}
 \usepackage{graphicx}
-\usepackage[font=small,skip=0pt]{caption}
+\usepackage[font=small,skip=4pt]{caption}
 
 \pdfinfo{
 /Title (Formatting Instructions for Authors)
@@ -31,7 +31,7 @@ issa2018@mymail.pomona.edu\\
 \begin{document} 
 \maketitle
 \begin{abstract}
-The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting DNA to musical data in the form of MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and their CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in a CDS region is mapped to a major chord, individual nucleotides in introns are mapped to diminished chords, and individual nucleotides in UTRs are mapped to minor chords. CDS codons are mapped to chords based on the amino acids they code for, and rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are also at a higher volume. By mapping nucleotides and codons to chords and analyzing genetic material as music, BioMus thus gives scientists a novel means to conceptualize the process of biological splicing and translation.
+The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting DNA to musical data in the form of MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and their CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in the CDS is mapped to a major chord based on the amino acid it codes for, individual nucleobases in introns are mapped to diminished chords, and individual nucleobases in UTRs are mapped to minor chords. Rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are also at a higher volume. By mapping nucleobases and codons to chords and analyzing genetic material as music, BioMus thus gives scientists a novel and straightforward means to conceptualize the process of biological splicing and translation.
 
 ONE PARAGRAPH, max 250words
 \end{abstract}
@@ -42,9 +42,31 @@ ONE PARAGRAPH, max 250words
 
 Ingalls et al. present 
 
+\section{Background}
+Genes consist of sequences of DNA. The double-stranded DNA helix is shaped like a ladder, where each rung consists of two nucleotides paired together. Every nucleotide is built on a $nucleobase$, which in DNA are adenine (A), cytosine (C), guanine (G) and thymine (T), and have the pairings C-G and A-T. The process of converting DNA to mRNA is called $transcription$, and the process of converting mRNA to amino acids (the building blocks of proteins) is called $translation$. Every gene codes for a single protein.
+
+Transcription contains a stage called \textit{RNA splicing}, where certain regions called $introns$ are removed, or ``spliced out," from the original DNA sequence. The final ``mature" mRNA solely consists of the remaining regions, called exons, that are connected to each other. The exons comprising mature mRNA consist of two \textit{untranslated regions} UTRs and the \textit{CoDing Sequence}, or CDS. 
+
+The CDS is a sequence of nucleotides that corresponds with the sequence of amino acids in a protein during translation. It begins with the start codon (ATG) and terminates with a stop codon (TAA, TAG, or TGA). In the CDS, nucleotides grouped into three to create $codons$. Each codon codes for a single amino acid. The UTR preceding the CDS is called the \textit{5' UTR}, and the UTR following the CDS is called the \textit{3' UTR}.
+
+Note in the original DNA sequence before transcription, both the UTR and the CDS may be spread across multiple exons (i.e. they may be broken into multiple sections by intervening introns). In the CDS, this means that individual codons may be broken across splice sites: the codon will begin at the end of one exon, and conclude at the beginning of the next exon.
+
+Figure \ref{fig:gene} shows the splicing process for a sample gene. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.48\textwidth]{images/gene.png}
+  \caption{Homo sapiens}\label{fig:gene}
+  \vspace{-3mm}
+\end{figure}
+
+The top sequence in Figure \ref{fig:gene} presents the gene before transcription, and the bottom sequence presents the result of splicing represented with \textit{complementary DNA}, or cDNA. cDNA is analogous to mRNA; it is synthetically constructed from mRNA by biologists for sequencing as a more convenient way to work with the sequence. A cDNA and mRNA sequence are identical except with the substitution of uracil for thymine in the mRNA.
+
+In Figure \ref{fig:gene}, exons are in color with capitalized nucleobase, while introns are lowercase and gray. The UTRs are in orange, and the CDS is in blue and red. Red nucleobases in the CDS indicate codons that are broken across splice sites. Notice how the 5' UTR is broken across the first two two exons, and the CDS is broken across the final four exons. In the CDS, codons are explicated by the alternating highlights. After we have spliced the introns from the gene, we end up with the contiguous sequence of exons in the bottom sequence in Figure \ref{fig:gene}. Splice sites are indicated with the black vertical bars.
+
 \section{Converting DNA to Music}
 \subsection{Obtaining Genetic Data}
-BioMus's process of DNA sonification begins with the user specifying a desired species and gene. This information is passed to Ensembl's REST API to obtain Ensembl's choromomal coordinates of the gene's exons. These coordinates are sourced from the gene's \textit{canonical transcript}, the gene's transcript in Ensembl that is overall the most conserved and highly expressed, has the longest CDS, and is also represented in other major databases such as the NCBI \cite{ensembl_transcript_flags}. The exon coordinates also define the chromosomal coordinates of the intervening introns. Each pair of exon and intron coordinates is passed back to the Ensembl REST API to obtain the nucleotide sequences for each region, and the result is a list of sequence regions alternating exons and introns. For instance, consider the abbreviated sequence obtained from Ensembl for the \textit{Homo sapiens} (human) TP53 tumor suppressor gene in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. Ellipses indicate omitted nucleotides for the sake of example.
+BioMus's process of DNA sonification begins with the user specifying a desired species and gene. This information is passed to Ensembl's REST API to obtain Ensembl's choromomal coordinates of the gene's exons. These coordinates are sourced from the gene's \textit{canonical transcript}, the gene's transcript in Ensembl that is overall the most conserved and highly expressed, has the longest CDS, and is also represented in other major databases such as the NCBI \cite{ensembl_transcript_flags}. The exon coordinates also define the chromosomal coordinates of the intervening introns. Each pair of exon and intron coordinates is passed back to the Ensembl REST API to obtain the nucleobase sequences for each region, and the result is a list of alternating exons and introns. For instance, consider the abbreviated sequence obtained from Ensembl for the \textit{Homo sapiens} (human) TP53 tumor suppressor gene in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. Ellipses indicate omitted nucleobases for the sake of example.
 
 \begin{figure}[h!]
 \centering
@@ -55,7 +77,7 @@ BioMus's process of DNA sonification begins with the user specifying a desired s
 
 Exons are in color, while introns are in grey. Within the exons, the orange regions are the UTRs, and the blue regions are the CDS. Notice how the CDS begins with the bolded start codon ATG and ends with the bolded stop codon TGA. 
 
-Now, the goal is to extract the 5' UTR from the list. In order to ensure the correct CDS, is necessary to verify the 5' UTR with Ensemble, since it may include multiple ATG start codons that do not signal the start of the CDS. This is not necessary for the 3' UTR, since once we know we are in the CDS, the first stop codon will always signal the end of the CDS and the beginning of the 3' UTR. We obtain the 5' UTR from Ensembl by querying the Ensembl REST API for the cDNA (complementary DNA) sequence of the canonical transcript. cDNA is identical to the CDS, but includes the UTRs \cite{ensembl_glossary}. By requesting Ensembl to ``mask" the UTRs of the cDNA sequence by representing them in lowercase, we can successfully isolate the 5' UTR and extract it from the list in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. As seen in Figure \ref{fig:post_processed_seq_homo_sapiens_tp53}, we end up with a list of the 5' UTR regions (top), and a list of the CDS regions and introns (bottom).\cite{10.1162/artl_a_00325}
+Now, the goal is to extract the 5' UTR from the list. In order to ensure the correct CDS, is necessary to verify the 5' UTR with Ensemble, since it may include multiple ATG start codons that do not signal the start of the CDS. This is not necessary for the 3' UTR, since once we know we are in the CDS, the first stop codon will always signal the end of the CDS and the beginning of the 3' UTR. We obtain the 5' UTR from Ensembl by querying the Ensembl REST API for the cDNA sequence of the canonical transcript. By requesting Ensembl to ``mask" the UTRs of the cDNA sequence by representing them in lowercase, we can successfully isolate the 5' UTR and extract it from the list in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. As seen in Figure \ref{fig:post_processed_seq_homo_sapiens_tp53}, we end up with a list of the 5' UTR regions (top), and a list of the CDS regions and introns (bottom).\cite{10.1162/artl_a_00325}
 
 \begin{figure}[h!]
 \centering
@@ -69,7 +91,11 @@ We now have all the tools necessary to translate the genetic data into music.
 
 \subsection{Conversion to MIDI}
 
-Next, a MIDI track is created using the MIDIUtil library with the tempo set to \musQuarter\;= 200 BPM, and the DNA sequence is transcribed to RNA with Biopython. Recall the bases used in RNA are adenine (A), cytosine (C), guanine (G) and uracil (U), and have the pairings C-G and A-U. BioMus defines the following mapping of individual bases to musical notes relative to the local key in Table  \ref{table:nucleotides}.
+MIDI conversion begins by using the MIDIUtil Python library to create a MIDI track with the tempo set to \musQuarter\;= 200 BPM. Subsequently, individual nucleobases in UTRs are mapped to minor dyads (two-note chords), codons in the CDS are mapped to major triads, and individual nucleobases in introns are mapped diminished triads. 
+
+Sonification of the gene begins with the 5' UTR, and the initial key is set to C minor. No key changes occur in UTRs or introns; the key is exclusively changed in the CDS and is determined by the codon. Thus, before the CDS begins, all introns and the 5' UTR remain in the initial key of C minor. After the CDS begins, the key of an intron is determined by the final codon in the preceding exon (whether or not that codon is broken across the splice site). The stop codon terminating the CDS then determines the key of all subsequent introns as well as the 3' UTR.
+
+To construct the minor dyads in the 5' and 3' UTRs, BioMus defines the following mapping of individual nucleobases to musical notes relative to the local key in Table  \ref{table:nucleobases}.
 
 \begin{table}[h!]
 \centering
@@ -77,13 +103,31 @@ Next, a MIDI track is created using the MIDIUtil library with the tempo set to \
 \hline
 C   & Tonic    \\ \hline
 G,A & Mediant  \\ \hline
-U   & Dominant \\ \hline
+T   & Dominant \\ \hline
 \end{tabular}
-\caption{RNA Base Mappings}
-\label{table:nucleotides}
+\caption{DNA Base Mappings}
+\label{table:nucleobases}
 \end{table}
 
-The musical key is minor in non-coding regions and major in protein-coding regions, with the initial key set to C minor. Before the start codon AUG is encountered, individual nucleotides outline the 3 notes of minor triad of the local key (base pairs form dyads, or 2-note chords). Then, during translation, the key is major and the volume doubles. The
+The minor dyad for each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C, then the dyad will consist of the notes C (tonic) and E\musFlat (mediant). Thus, all dyads consists of tonic-mediant or mediant-dominant pairs. All UTR dyads are represented with quarter notes. 
+
+To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+C   & Tonic    \\ \hline
+G,A & Mediant  \\ \hline
+T   & Dominant \\ \hline
+\end{tabular}
+\caption{DNA Base Mappings}
+\label{table:nucleobases}
+\end{table}
+
+The minor dyad for each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C, then the dyad will consist of the notes C (tonic) and E\musFlat (mediant). All UTR dyads are represented with quarter notes. 
+
+ Before the start codon AUG is encountered, individual nucleotides outline the 3 notes of minor triad of the local key (base pairs form dyads, or 2-note chords). Then, during translation, the key is major and the volume doubles. The
         key is determined by the codon (see the AMINOACIDS dictionary above). Individual nucleotides no longer determine the notes; this is now dictated
         by the codons. Each time the key changes based on the codon, the major triad of that key is played, until a stop codon is reached. Then we remain in
         the same minor key as the previous stop codon, but the volume is halved again and individual nucleotides once again outline the notes of the new
@@ -98,15 +142,15 @@ Throughout this paper, the chosen gene for MIDI generation and analysis is TP53,
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-AUG & \begin{tabular}[c]{@{}l@{}}Methionine/\\Start Codon\end{tabular} & C                         \\ \hline
-AUU, AUC, AUA & Isoleucine                        & C\musSharp \\ \hline
+ATG & \begin{tabular}[c]{@{}l@{}}Methionine/\\Start Codon\end{tabular} & C                         \\ \hline
+ATT, ATC, ATA & Isoleucine                        & C\musSharp \\ \hline
 AAA, AAG &  Lysine                      & D                         \\ \hline
-ACU, ACC, ACA, ACG & Threonine                       & E\musFlat  \\ \hline
-UUU, UUC & Phenylalanine                       & E                         \\ \hline
-UGG & Tryptophan             & F                         \\ \hline
-\begin{tabular}[c]{@{}l@{}}UUA, UUG, CUU, CUC, \\CUA, CUG\end{tabular}  & Leucine                       & F\musSharp \\ \hline
-CAU, CAC & Histidine                       & G                         \\ \hline
-GUU, GUC, GUA, GUG &  Valine                      & A\musFlat  \\ \hline
+ACT, ACC, ACA, ACG & Threonine                       & E\musFlat  \\ \hline
+TTT, TTC & Phenylalanine                       & E                         \\ \hline
+TGG & Tryptophan             & F                         \\ \hline
+\begin{tabular}[c]{@{}l@{}}TTA, TTG, CTT, CTC, \\CTA, CTG\end{tabular}  & Leucine                       & F\musSharp \\ \hline
+CAT, CAC & Histidine                       & G                         \\ \hline
+GTT, GTC, GTA, GTG &  Valine                      & A\musFlat  \\ \hline
 \end{tabular}
 \caption{Essential Amino Acids}
 \label{table:essential}
@@ -116,9 +160,9 @@ GUU, GUC, GUA, GUG &  Valine                      & A\musFlat  \\ \hline
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-AAU, AAC & Asparagine & A                        \\ \hline
-GAU, GAC & Aspartate  & B\musFlat \\ \hline
-GCU, GCC, GCA, GCG & Alanine    & B                        \\ \hline
+AAT, AAC & Asparagine & A                        \\ \hline
+GAT, GAC & Aspartate  & B\musFlat \\ \hline
+GCT, GCC, GCA, GCG & Alanine    & B                        \\ \hline
 \end{tabular}
 \caption{Nonessential Amino Acids}
 \label{table:nonessential}
@@ -128,13 +172,13 @@ GCU, GCC, GCA, GCG & Alanine    & B                        \\ \hline
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-UAU, UAC & Tyrosine                & C \\ \hline
-UGU, UGC & Cysteine                & D \\ \hline
-\begin{tabular}[c]{@{}l@{}}UCC, UCU, UCA, UCG, \\ AGU,  AGC\end{tabular}  & Serine                  & E \\ \hline
-\begin{tabular}[c]{@{}l@{}}AGA, AGG, CGU, CGC, \\ CGA, CGG\end{tabular}  & Arginine                & F \\ \hline
-CCU,  CCC, CCA, CCG & Proline                 & G \\ \hline
+TAT, TAC & Tyrosine                & C \\ \hline
+TGT, TGC & Cysteine                & D \\ \hline
+\begin{tabular}[c]{@{}l@{}}TCC, TCT, TCA, TCG, \\ AGT,  AGC\end{tabular}  & Serine                  & E \\ \hline
+\begin{tabular}[c]{@{}l@{}}AGA, AGG, CGT, CGC, \\ CGA, CGG\end{tabular}  & Arginine                & F \\ \hline
+CCT,  CCC, CCA, CCG & Proline                 & G \\ \hline
 CAA, CAG, GAA, GAG  & \begin{tabular}[c]{@{}l@{}}Glutamine/\\Glutamic acid\end{tabular}  & A \\ \hline
-GGU, GGC, GGA, GGG & Glycine                 & B \\ \hline
+GGT, GGC, GGA, GGG & Glycine                 & B \\ \hline
 \end{tabular}
 \caption{Conditionally Essential Amino Acids}
 \label{table:conditionally_essential}
