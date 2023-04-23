@@ -43,13 +43,14 @@ ONE PARAGRAPH, max 250words
 Ingalls et al. present 
 
 \section{Background}
-Genes consist of sequences of DNA. The double-stranded DNA helix is shaped like a ladder, where each rung consists of two nucleotides paired together. Every nucleotide is built on a $nucleobase$, which in DNA are adenine (A), cytosine (C), guanine (G) and thymine (T), and have the pairings C-G and A-T. The process of converting DNA to mRNA is called $transcription$, and the process of converting mRNA to amino acids (the building blocks of proteins) is called $translation$. Every gene codes for a single protein.
+Genes consist of sequences of DNA. The double-stranded DNA helix is shaped like a ladder, where each rung consists of two complementary nucleotides paired together. Every nucleotide is built on a $nucleobase$, which in DNA are adenine (A), cytosine (C), guanine (G) and thymine (T), and have the complementary pairings C-G and A-T. The DNA helix consists of the \textit{coding strand} and the \textit{template strand}. The template strand codes for mRNA during $transcription$, where each nucleotide is converted to its complement, and thymine is replaced with the base uracil.% https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/transcription-and-rna-processing/a/overview-of-transcription
+Subsequently, mRNA is converted to amino acids (the building blocks of proteins) during $translation$. Every gene codes for a single protein.
 
-Transcription contains a stage called \textit{RNA splicing}, where certain regions called $introns$ are removed, or ``spliced out," from the original DNA sequence. The final ``mature" mRNA solely consists of the remaining regions, called exons, that are connected to each other. The exons comprising mature mRNA consist of two \textit{untranslated regions} UTRs and the \textit{CoDing Sequence}, or CDS. 
+Transcription in eukaryotes includes a stage called \textit{RNA splicing}, where certain regions called $introns$ are removed, or ``spliced out," from the original DNA sequence. The final ``mature" mRNA solely consists of the remaining regions, called exons, that are connected to each other. The exons comprising mature mRNA consist of two \textit{untranslated regions}, or UTRs, and the \textit{CoDing Sequence}, or CDS. 
 
 The CDS is a sequence of nucleotides that corresponds with the sequence of amino acids in a protein during translation. It begins with the start codon (ATG) and terminates with a stop codon (TAA, TAG, or TGA). In the CDS, nucleotides grouped into three to create $codons$. Each codon codes for a single amino acid. The UTR preceding the CDS is called the \textit{5' UTR}, and the UTR following the CDS is called the \textit{3' UTR}.
 
-Note in the original DNA sequence before transcription, both the UTR and the CDS may be spread across multiple exons (i.e. they may be broken into multiple sections by intervening introns). In the CDS, this means that individual codons may be broken across splice sites: the codon will begin at the end of one exon, and conclude at the beginning of the next exon.
+Note that in the original pre-transcription DNA sequence, both the UTRs and the CDS may be spread across multiple exons (i.e. they may be broken into multiple sections by intervening introns). In the CDS, this means that individual codons may be broken across splice sites: the codon will begin at the end of one exon, and conclude at the beginning of the next exon.
 
 Figure \ref{fig:gene} shows the splicing process for a sample gene. 
 
@@ -60,7 +61,7 @@ Figure \ref{fig:gene} shows the splicing process for a sample gene.
   \vspace{-3mm}
 \end{figure}
 
-The top sequence in Figure \ref{fig:gene} presents the gene before transcription, and the bottom sequence presents the result of splicing represented with \textit{complementary DNA}, or cDNA. cDNA is analogous to mRNA; it is synthetically constructed from mRNA by biologists for sequencing as a more convenient way to work with the sequence. A cDNA and mRNA sequence are identical except with the substitution of uracil for thymine in the mRNA.
+The top sequence in Figure \ref{fig:gene} presents the gene before transcription, and the bottom sequence presents the result of splicing represented with \textit{complementary DNA}, or cDNA. A cDNA sequence is complementary to its source mRNA sequence and contains thymine rather than uracil; it is identical to the template DNA strand without the introns. Biologists synthetically construct cDNA from mRNA as a more convenient way to work with the sequence.
 
 In Figure \ref{fig:gene}, exons are in color with capitalized nucleobase, while introns are lowercase and gray. The UTRs are in orange, and the CDS is in blue and red. Red nucleobases in the CDS indicate codons that are broken across splice sites. Notice how the 5' UTR is broken across the first two two exons, and the CDS is broken across the final four exons. In the CDS, codons are explicated by the alternating highlights. After we have spliced the introns from the gene, we end up with the contiguous sequence of exons in the bottom sequence in Figure \ref{fig:gene}. Splice sites are indicated with the black vertical bars.
 
@@ -95,7 +96,7 @@ MIDI conversion begins by using the MIDIUtil Python library to create a MIDI tra
 
 Sonification of the gene begins with the 5' UTR, and the initial key is set to C minor. No key changes occur in UTRs or introns; the key is exclusively changed in the CDS and is determined by the codon. Thus, before the CDS begins, all introns and the 5' UTR remain in the initial key of C minor. After the CDS begins, the key of an intron is determined by the final codon in the preceding exon (whether or not that codon is broken across the splice site). The stop codon terminating the CDS then determines the key of all subsequent introns as well as the 3' UTR.
 
-To construct the minor dyads in the 5' and 3' UTRs, BioMus defines the following mapping of individual nucleobases to musical notes relative to the local key in Table  \ref{table:nucleobases}.
+To construct the minor dyads in the 5' and 3' UTRs, BioMus defines the following mapping of individual nucleobases to musical notes relative to the local musical key in Table  \ref{table:nucleobases}.
 
 \begin{table}[h!]
 \centering
@@ -109,34 +110,14 @@ T   & Dominant \\ \hline
 \label{table:nucleobases}
 \end{table}
 
-The minor dyad for each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C, then the dyad will consist of the notes C (tonic) and E\musFlat (mediant). Thus, all dyads consists of tonic-mediant or mediant-dominant pairs. All UTR dyads are represented with quarter notes. 
+The minor dyad corresponding to each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C or G, then the dyad will consist of the notes C (tonic) and E\musFlat (mediant). Similarly, if we encounter the nucleobase A or T, then the dyad is E\musFlat and G (dominant). All UTR dyads are represented with quarter notes.
 
-To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed 
+To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed as in the UTRs. However, here we also add the diminished seventh scale degree from the local key to each dyad to construct the diminished triads. For instance, if the key is C minor and we encounter the nucleobase C or G, then the triad will consist of the notes C (tonic), E\musFlat (mediant), and B\musDoubleFlat (diminished seventh). Similarly, if we encounter the nucleobase A or T, then the triad will consist of the notes E\musFlat, G (dominant), and B\musDoubleFlat. We use the term ``diminished triad" loosely here, since technically only the latter triad described fits the formal definition of a diminished triad, with two minor thirds stacked on top of one another. However, as both chords outline a diminished seventh chord, their sonority is similar enough that we dub them both diminished triads as a way of distinguishing them from major or minor chords. Like UTRs, all intron triads are represented with quarter notes. 
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|l|}
-\hline
-C   & Tonic    \\ \hline
-G,A & Mediant  \\ \hline
-T   & Dominant \\ \hline
-\end{tabular}
-\caption{DNA Base Mappings}
-\label{table:nucleobases}
-\end{table}
+When the CDS begins, we map codons (groups of three nucleobases), rather than individual nucleobases, to chords. The first codon in the CDS is always ATG, the start codon, which is mapped to C major and is given a half note duration to signify the start of the protein-coding region. Subsequent chords return to quarter notes. To further emphasize we are in a protein-coding region, the volume is doubled throughout the CDS. 
 
-The minor dyad for each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C, then the dyad will consist of the notes C (tonic) and E\musFlat (mediant). All UTR dyads are represented with quarter notes. 
+Figures \ref{table:essential} and \ref{table:nonessential} explicate the mappings from codons to keys. Each codon in the left column is mapped to a root position major triad in the designated key. 
 
- Before the start codon AUG is encountered, individual nucleotides outline the 3 notes of minor triad of the local key (base pairs form dyads, or 2-note chords). Then, during translation, the key is major and the volume doubles. The
-        key is determined by the codon (see the AMINOACIDS dictionary above). Individual nucleotides no longer determine the notes; this is now dictated
-        by the codons. Each time the key changes based on the codon, the major triad of that key is played, until a stop codon is reached. Then we remain in
-        the same minor key as the previous stop codon, but the volume is halved again and individual nucleotides once again outline the notes of the new
-        minor triad. Then this process can repeat if another start codon is then encountered'
-
-
-The tonic, mediant, and dom
-
-Throughout this paper, the chosen gene for MIDI generation and analysis is TP53, which codes for the tumor suppressor protein p53. 
 
 \begin{table}[h!]
 \centering
