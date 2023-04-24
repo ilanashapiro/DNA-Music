@@ -14,6 +14,18 @@ def lookup_transcript(species_name, gene_name):
             return (entry['Exon'], entry['id'])
     return []
 
+def lookup_single_region_from_coords(coords, species):
+    server = "http://rest.ensembl.org"
+    ext = "/sequence/region/" + species + "/" + coords
+
+    try:
+        response = requests.get(server+ext, headers={"Content-Type": "text/plain"})
+        response.raise_for_status()
+        seq = response.text.split("\n", 1)[0]
+        return seq
+    except HTTPError as exc:
+        raise Exception(exc.response.status_code)
+    
 def lookup_multiple_regions(regions, species):
     server = "https://rest.ensembl.org"
     ext = "/sequence/region/" + species
@@ -48,19 +60,6 @@ def get_exon_coords(exon):
 
     coords = str(exon['seq_region_name'])+":"+exon_start+".."+exon_end+":"+str(exon['strand'])
     return coords
-
-# DEPRECATED -- now using optimized multi-region query
-def lookup_single_region_from_coords(coords):
-    server = "http://rest.ensembl.org"
-    generic_ext = "/sequence/region/human/"
-
-    try:
-        response = requests.get(server+generic_ext+coords, headers={"Content-Type": "text/plain"})
-        response.raise_for_status()
-        seq = response.text.split("\n", 1)[0]
-        return seq
-    except HTTPError as exc:
-        raise Exception(exc.response.status_code)
 
 def lookup_5prime_UTR_from_transcript_id(ID):
     server = "http://rest.ensembl.org"
@@ -106,12 +105,12 @@ def get_sequence(species_name, gene_name):
         intron_seq = intron_regions[i]
 
         if UTR_5prime.startswith(exon_seq): # the entire exon is part of the 5' UTR
-            UTR_5prime_split_on_curr_exon = UTR_5prime.split(exon_seq)
+            UTR_5prime_split_on_curr_exon = UTR_5prime.split(exon_seq, 1)
             UTR_5prime_exons_list.append(exon_seq)
             UTR_5prime = ''.join(UTR_5prime_split_on_curr_exon[1:])
             exon_seq = ""
         elif len(UTR_5prime) > 0 and exon_seq.startswith(UTR_5prime): # part of the exon constitutes the last part of the 5' UTR
-            curr_exon_split_on_UTR_5prime = exon_seq.split(UTR_5prime)
+            curr_exon_split_on_UTR_5prime = exon_seq.split(UTR_5prime, 1)
             UTR_5prime_exons_list.append(UTR_5prime)
             exon_seq = ''.join(curr_exon_split_on_UTR_5prime[1:])
             UTR_5prime = ""
@@ -123,25 +122,14 @@ def get_sequence(species_name, gene_name):
     # create a header like >ENST00000412061.3.Intron_1 chromosome:GRCh38:17:43094861:43095845:-1
     # use headline = ">"+t+".Intron_"+str(i+1) if you don't want the chromosomal position
     # print(headline, sequence, sep="\n")
-
+    
     final_exon_coords = get_exon_coords(exons_info_list[-1])
-    final_exon_seq = lookup_single_region_from_coords(final_exon_coords)
+    final_exon_seq = lookup_single_region_from_coords(final_exon_coords, species_name)
     CDS_list.append(final_exon_seq)
 
     return (UTR_5prime_exons_list, CDS_list)
 
-# def write_sequences_file_to_folder(class_name, class_folder_path, species_scientific_name, gene_name):
-#     '''write the DNA sequence for the desired gene and species into a folder that has the name of the species' biological class'''
-#     sequence = query_ensembl_sequence(species_scientific_name, gene_name).text
+# get_sequence("Danio_rerio", "TP53")
 
-#     if(not os.path.isdir(os.path.join(class_folder_path, class_name))):
-#         os.mkdir(os.path.join(class_folder_path, class_name))
-#     full_file_name = os.path.join(class_folder_path, class_name, species_scientific_name)  + ".txt"
-    
-#     with open(full_file_name, 'w') as f:
-#         f.write(sequence)
-
-# get_sequence("Danio rerio", "TP53")
-
-# for entry in get_sequence("Zebrafish", "TP53"):
+# for entry in get_sequence("Danio rerio", "TP53"):
 #     print(entry, "\n")

@@ -180,16 +180,28 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
     start_codon_encountered = False
     remaining_length_in_codon = 0 # for codons across splice regions
     is_spliced = False
+    regionIdx = 0
+    
+    while regionIdx < len(CDS_list):
+        region = CDS_list[regionIdx]
 
-    for regionIdx, region in enumerate(CDS_list):
         if UTR_frag_index < len(UTR_5prime_exons_list):
+            change_key(tonic, tonic_note_name, tonic_note_name, ChordQuality.MINOR, dna_to_chromatic_dict)
             time = process_UTR_frag(UTR_5prime_exons_list[UTR_frag_index], midi_file, track_num, dna_to_chromatic_dict, time, 1, volume)
             UTR_frag_index += 1
             if UTR_frag_index == len(UTR_5prime_exons_list): # translation begins when we finish the UTR
                 translation_initiated = True
+
+        # then the entire region is part of the 5' UTR based on how the list is preprocessed
+        # so the current exon is empty since we just processed the entire exon (UTR) 
+        # and so we want to skip it and immediately process the next intron now which is at the next index
+        if len(region) == 0: 
+            regionIdx += 1
+            region = CDS_list[regionIdx]
+
         nucleotideIdx = 0
         is_exon = regionIdx % 2 == 0
-
+        
         while nucleotideIdx < len(region):
             nucleotide = region[nucleotideIdx]
             base_pair = COMPLEMENT[nucleotide]
@@ -275,7 +287,7 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
             else: # we are in an intron
                 duration = 1
                 volume = 50
-                (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, tonic_note_name, ChordQuality.DIMINISHED, dna_to_chromatic_dict)
+                (tonic, _, _, _) = change_key(tonic, tonic_note_name, tonic_note_name, ChordQuality.DIMINISHED, dna_to_chromatic_dict)
                 midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[nucleotide.upper()]], time, duration, volume)
                 midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dna_to_chromatic_dict[base_pair.upper()]], time, duration, volume)
                 midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[get_submediant_note_name(tonic)], time, duration, volume)
@@ -283,7 +295,7 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                 time += duration
 
             duration = 1
-
+        regionIdx += 1
     write_to_disk(full_file_name, midi_file)
 
 def get_sequence_complement(sequence):
