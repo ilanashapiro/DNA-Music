@@ -110,14 +110,15 @@ T   & Dominant \\ \hline
 \label{table:nucleobases}
 \end{table}
 
-The minor dyad corresponding to each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C or G, then the dyad will consist of the notes C (tonic) and E\musFlat (mediant). Similarly, if we encounter the nucleobase A or T, then the dyad is E\musFlat and G (dominant). All UTR dyads are represented with quarter notes.
+The minor dyad corresponding to each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C or G, then the dyad will consist of the notes C (tonic) and E\musFlat \; (mediant). Similarly, if we encounter the nucleobase A or T, then the dyad is E\musFlat \; and G (dominant). All UTR dyads are represented with quarter notes.
 
-To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed as in the UTRs. However, here we also add the diminished seventh scale degree from the local key to each dyad to construct the diminished triads. For instance, if the key is C minor and we encounter the nucleobase C or G, then the triad will consist of the notes C (tonic), E\musFlat (mediant), and B\musDoubleFlat (diminished seventh). Similarly, if we encounter the nucleobase A or T, then the triad will consist of the notes E\musFlat, G (dominant), and B\musDoubleFlat. We use the term ``diminished triad" loosely here, since technically only the latter triad described fits the formal definition of a diminished triad, with two minor thirds stacked on top of one another. However, as both chords outline a diminished seventh chord, their sonority is similar enough that we dub them both diminished triads as a way of distinguishing them from major or minor chords. Like UTRs, all intron triads are represented with quarter notes. 
+To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed as in the UTRs. However, here we also add the diminished seventh scale degree from the local key to each dyad to construct the diminished triads. For instance, if the key is C minor and we encounter the nucleobase C or G, then the triad will consist of the notes C (tonic), E\musFlat \; (mediant), and B\musDoubleFlat (diminished seventh). Similarly, if we encounter the nucleobase A or T, then the triad will consist of the notes E\musFlat, G (dominant), and B\musDoubleFlat. We use the term ``diminished triad" loosely here, since technically only the latter triad described fits the formal definition of a diminished triad, with two minor thirds stacked on top of one another. However, as both chords outline a diminished seventh chord, their sonority is similar enough that we dub them both diminished triads as a way of distinguishing them from major or minor chords. Like UTRs, all intron triads are represented with quarter notes. 
 
-When the CDS begins, we map codons (groups of three nucleobases), rather than individual nucleobases, to chords. The first codon in the CDS is always ATG, the start codon, which is mapped to C major and is given a half note duration to signify the start of the protein-coding region. Subsequent chords return to quarter notes. To further emphasize we are in a protein-coding region, the volume is doubled throughout the CDS. 
+When the CDS begins, we map codons (groups of three nucleobases), rather than individual nucleobases, to chords. The first codon in the CDS is always ATG, the start codon, which is mapped to a C major triad and is given a half note duration, rather than a quarter note, to signify the start of the protein-coding region. Subsequent chords return to quarter notes. To further emphasize we are in a protein-coding region, the volume is doubled throughout the CDS. The volume is halved to its original value whenever we encounter an intron, and doubled again when we return to the CDS in the next exon. 
 
-Figures \ref{table:essential} and \ref{table:nonessential} explicate the mappings from codons to keys. Each codon in the left column is mapped to a root position major triad in the designated key. 
+We now want each amino acid encoded in the CDS to map to a unique chord. We thus want to create an injective mapping between amino acids and chords. We can do this by first solely considering the set of essential and nonessential amino acids (with which we can create a bijective mapping with the set of possible keys), and separately considering the set of conditionally essential amino acids (with which we can create an injective mapping with the set of possible keys).
 
+Figures \ref{table:essential} and \ref{table:nonessential} explicate the chosen bijective mapping between the set of essential and nonessential amino acids and the set of possible keys. The codons that code for each amino acid are listed in the left hand column, and BioMus maps each to a major triad in the corresponding key in the right column. 
 
 \begin{table}[h!]
 \centering
@@ -149,6 +150,9 @@ GCT, GCC, GCA, GCG & Alanine    & B                        \\ \hline
 \label{table:nonessential}
 \end{table}
 
+
+Next, we consider the set of nonessential amino acids. Tables \ref{table:essential} and \ref{table:nonessential} explicate the chosen injective mapping between this set and the set of possible keys. Notice that the mapping is also bijective between the nonessential amino acids and the set of natural keys. 
+
 \begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|l|}
@@ -165,6 +169,10 @@ GGT, GGC, GGA, GGG & Glycine                 & B \\ \hline
 \label{table:conditionally_essential}
 \end{table}
 
+This time, BioMus maps each codon to an augmented triad, rather than a major triad, in the corresponding key in the right column. 
+
+Finally, we consider the stop codons, which do not code for amino acids and instead terminate the CDS. They are mapped to minor triads in the keys explicated in Table \ref{table:stop_codons}. 
+
 \begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|}
@@ -176,6 +184,8 @@ UGA & G \\ \hline
 \caption{Stop Codons}
 \label{table:stop_codons}
 \end{table}
+
+Each stop codon chord is given a half note duration and the volume is halved to signify the end of the protein-coding region. The subsequent minor dyads in the 3' UTR return to quarter notes. 
 
 \section{Sample Music}
 

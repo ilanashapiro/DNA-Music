@@ -106,6 +106,35 @@ COMPLEMENT = {
     "G":"C",
 }
 
+CONDITIONALLY_ESSENTIAL = ["TAT",
+                "TAC", #tyrosine
+                "TGT",
+                "TGC", #cysteine
+                "TCC",
+                "TCT",
+                "TCA",
+                "TCG", 
+                "AGT",
+                "AGC", #serine
+                "AGA",
+                "AGG", 
+                "CGT",
+                "CGC",
+                "CGA",
+                "CGG", #arginine
+                "CCT",
+                "CCC",
+                "CCA",
+                "CCG", #proline
+                "CAA",
+                "CAG",
+                "GAA",
+                "GAG", #glutamine/glutamic acid
+                "GGT",
+                "GGC",
+                "GGA",
+                "GGG"] #glycine
+
 def change_key(curr_tonic, curr_tonic_note_name, new_key, chord_quality, dna_to_chromatic_dict):
     '''changes the key given a new key and a mode (major or minor). The intervallic distance between the root of the current key and the root of the new key (e.g. C and A) is determined, 
     and, along with the mode, the tonic, mediant, and dominant notes of the new key (which are the 3 notes of the major/minor triad of that key) are determined'''
@@ -238,11 +267,12 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                         volume = 100
                         duration = 0.5 if is_spliced else 2 
                         (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], ChordQuality.MAJOR, dna_to_chromatic_dict)
-
+                        dominant_pitch = PITCH_DICTIONARY[dominant_note_name] + (1 if triplet_codon in CONDITIONALLY_ESSENTIAL else 0) # we want augmented chord in this case
+                        
                         #longer (major) chord to signify start of translation.
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, dominant_pitch, time, duration, volume)
                         
                         translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
                         time += duration
@@ -271,10 +301,11 @@ def add_notes(folder_name, track_name, full_file_name, UTR_5prime_exons_list, CD
                         duration = 0.5 if is_spliced else 1
 
                         (tonic, tonic_note_name, mediant_note_name, dominant_note_name) = change_key(tonic, tonic_note_name, AMINO_ACIDS[triplet_codon], ChordQuality.MAJOR, dna_to_chromatic_dict)
+                        dominant_pitch = PITCH_DICTIONARY[dominant_note_name] + (1 if triplet_codon in CONDITIONALLY_ESSENTIAL else 0) # we want augmented chord in this case
 
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[tonic_note_name], time, duration, volume)
                         midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[mediant_note_name], time, duration, volume)
-                        midi_file.addNote(track_num, CHANNEL, PITCH_DICTIONARY[dominant_note_name], time, duration, volume)
+                        midi_file.addNote(track_num, CHANNEL, dominant_pitch, time, duration, volume)
                         
                         translation_keys_file.write(AMINO_ACIDS[triplet_codon] + " ")
                         time += duration
