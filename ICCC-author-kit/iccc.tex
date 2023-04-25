@@ -31,18 +31,10 @@ issa2018@mymail.pomona.edu\\
 \begin{document} 
 \maketitle
 \begin{abstract}
-The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting DNA to musical data in the form of MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and their CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in the CDS is mapped to a major chord based on the amino acid it codes for, individual nucleobases in introns are mapped to diminished chords, and individual nucleobases in UTRs are mapped to minor chords. Rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are also at a higher volume. By mapping nucleobases and codons to chords and analyzing genetic material as music, BioMus thus gives scientists a novel and straightforward means to conceptualize the process of biological splicing and translation.
-
-ONE PARAGRAPH, max 250words
+The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting DNA to musical data in the form of MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and their CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in the CDS is mapped to a major or augmented triad based on the amino acid it codes for, individual nucleobases in introns are mapped to diminished triads, and individual nucleobases in UTRs are mapped to minor dyads. Rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are also at a higher volume. By mapping nucleobases and codons to chords and analyzing genetic material as music, BioMus thus gives scientists a novel and straightforward means to conceptualize the process of biological splicing and translation.
 \end{abstract}
 
 \section{Introduction}
-
-\section{Related Work}
-
-Ingalls et al. present 
-
-\section{Background}
 Genes consist of sequences of DNA. The double-stranded DNA helix is shaped like a ladder, where each rung consists of two complementary nucleotides paired together. Every nucleotide is built on a $nucleobase$, which in DNA are adenine (A), cytosine (C), guanine (G) and thymine (T), and have the complementary pairings C-G and A-T. The DNA helix consists of the \textit{coding strand} and the \textit{template strand}. The template strand codes for mRNA during $transcription$, where each nucleotide is converted to its complement, and thymine is replaced with the base uracil.% https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/transcription-and-rna-processing/a/overview-of-transcription
 Subsequently, mRNA is converted to amino acids (the building blocks of proteins) during $translation$. Every gene codes for a single protein.
 
@@ -57,7 +49,7 @@ Figure \ref{fig:gene} shows the splicing process for a sample gene.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.48\textwidth]{images/gene.png}
-  \caption{Homo sapiens}\label{fig:gene}
+  \caption{DNA Splicing Example}\label{fig:gene}
   \vspace{-3mm}
 \end{figure}
 
@@ -65,6 +57,9 @@ The top sequence in Figure \ref{fig:gene} presents the gene before transcription
 
 In Figure \ref{fig:gene}, exons are in color with capitalized nucleobase, while introns are lowercase and gray. The UTRs are in orange, and the CDS is in blue and red. Red nucleobases in the CDS indicate codons that are broken across splice sites. Notice how the 5' UTR is broken across the first two two exons, and the CDS is broken across the final four exons. In the CDS, codons are explicated by the alternating highlights. After we have spliced the introns from the gene, we end up with the contiguous sequence of exons in the bottom sequence in Figure \ref{fig:gene}. Splice sites are indicated with the black vertical bars.
 
+\section{Related Work}
+
+Ingalls et al. present 
 \section{Converting DNA to Music}
 \subsection{Obtaining Genetic Data}
 BioMus's process of DNA sonification begins with the user specifying a desired species and gene. This information is passed to Ensembl's REST API to obtain Ensembl's choromomal coordinates of the gene's exons. These coordinates are sourced from the gene's \textit{canonical transcript}, the gene's transcript in Ensembl that is overall the most conserved and highly expressed, has the longest CDS, and is also represented in other major databases such as the NCBI \cite{ensembl_transcript_flags}. The exon coordinates also define the chromosomal coordinates of the intervening introns. Each pair of exon and intron coordinates is passed back to the Ensembl REST API to obtain the nucleobase sequences for each region, and the result is a list of alternating exons and introns. For instance, consider the abbreviated sequence obtained from Ensembl for the \textit{Homo sapiens} (human) TP53 tumor suppressor gene in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. Ellipses indicate omitted nucleobases for the sake of example.
@@ -72,7 +67,7 @@ BioMus's process of DNA sonification begins with the user specifying a desired s
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.48\textwidth]{images/pre_processed_seq_homo_sapiens_tp53_ABBREV}
-  \caption{Homo sapiens}\label{fig:pre_processed_seq_homo_sapiens_tp53}
+  \caption{\textit{Homo sapiens}, TP53 Gene}\label{fig:pre_processed_seq_homo_sapiens_tp53}
   \vspace{-3mm}
 \end{figure}
 
@@ -84,7 +79,7 @@ Now, the goal is to extract the 5' UTR from the list. In order to ensure the cor
 \centering
 \includegraphics[width=0.48\textwidth]{images/post_processed_seq_homo_sapiens_tp53_ABBREV}
 \vspace{-3mm}
-  \caption{Homo sapiens}\label{fig:post_processed_seq_homo_sapiens_tp53}
+  \caption{\textit{Homo sapiens}, TP53 Gene}\label{fig:post_processed_seq_homo_sapiens_tp53}
   \vspace{-3mm}
 \end{figure}
 
@@ -102,21 +97,34 @@ To construct the minor dyads in the 5' and 3' UTRs, BioMus defines the following
 \centering
 \begin{tabular}{|l|l|}
 \hline
-C   & Tonic    \\ \hline
-G,A & Mediant  \\ \hline
-T   & Dominant \\ \hline
+A   & Tonic    \\ \hline
+C, T & Mediant  \\ \hline
+G   & Dominant \\ \hline
 \end{tabular}
-\caption{DNA Base Mappings}
+\caption{DNA Nucleobase Mappings}
 \label{table:nucleobases}
 \end{table}
 
-The minor dyad corresponding to each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase C or G, then the dyad will consist of the notes C (tonic) and E\musFlat \; (mediant). Similarly, if we encounter the nucleobase A or T, then the dyad is E\musFlat \; and G (dominant). All UTR dyads are represented with quarter notes.
+The minor dyad corresponding to each nucleobase in a UTR is constructed with its base pair using the mapping in Table  \ref{table:nucleobases}. For instance, if the key is C minor and we encounter the nucleobase A or T, then the dyad will consist of the notes C (tonic) and E\musFlat \; (mediant). Similarly, if we encounter the nucleobase C or G, then the dyad is E\musFlat \; and G (dominant). All UTR dyads are represented with quarter notes.
 
-To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed as in the UTRs. However, here we also add the diminished seventh scale degree from the local key to each dyad to construct the diminished triads. For instance, if the key is C minor and we encounter the nucleobase C or G, then the triad will consist of the notes C (tonic), E\musFlat \; (mediant), and B\musDoubleFlat (diminished seventh). Similarly, if we encounter the nucleobase A or T, then the triad will consist of the notes E\musFlat, G (dominant), and B\musDoubleFlat. We use the term ``diminished triad" loosely here, since technically only the latter triad described fits the formal definition of a diminished triad, with two minor thirds stacked on top of one another. However, as both chords outline a diminished seventh chord, their sonority is similar enough that we dub them both diminished triads as a way of distinguishing them from major or minor chords. Like UTRs, all intron triads are represented with quarter notes. 
+To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a minor dyad is constructed as in the UTRs. However, here we also add the diminished seventh scale degree from the local key to each dyad to construct the diminished triads. For instance, if the key is C minor and we encounter the nucleobase C or G, then the triad will consist of the notes C (tonic), E\musFlat \; (mediant), and B\musDoubleFlat\; (diminished seventh). Similarly, if we encounter the nucleobase A or T, then the triad will consist of the notes E\musFlat, G (dominant), and B\musDoubleFlat. We use the term ``diminished triad" loosely here, since technically only the latter triad described fits the formal definition of a diminished triad, with two minor thirds stacked on top of one another. However, as both chords outline a diminished seventh chord, their sonority is similar enough that we dub them both diminished triads as a way of distinguishing them from major or minor chords. Like UTRs, all intron triads are represented with quarter notes. 
 
 When the CDS begins, we map codons (groups of three nucleobases), rather than individual nucleobases, to chords. The first codon in the CDS is always ATG, the start codon, which is mapped to a C major triad and is given a half note duration, rather than a quarter note, to signify the start of the protein-coding region. Subsequent chords return to quarter notes. To further emphasize we are in a protein-coding region, the volume is doubled throughout the CDS. The volume is halved to its original value whenever we encounter an intron, and doubled again when we return to the CDS in the next exon. 
 
-We now want each amino acid encoded in the CDS to map to a unique chord. We thus want to create an injective mapping between amino acids and chords. We can do this by first solely considering the set of essential and nonessential amino acids (with which we can create a bijective mapping with the set of possible keys), and separately considering the set of conditionally essential amino acids (with which we can create an injective mapping with the set of possible keys).
+We also consider the scenario where the final codon of an exon in the CDS is broken across a splice site (i.e. the codon is split by the intervening intron). When an incomplete codon is encountered at the end of an exon in the CDS, the subsequent exon is referenced for the remainder of the codon. The spliced codon is then represented with an eighth note triad rather than a quarter note, and the same eighth note triad is played at the beginning of the next exon to indicate that the remainder of the codon is found there. This scenario is detailed in Figure \ref{fig:splice_site_example}, where exons are represented in color and introns are in gray. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.38\textwidth]{images/splice_site_example}
+  \caption{Spliced Codon Example}
+  \label{fig:splice_site_example}
+  \vspace{-3mm}
+\end{figure}
+
+The spliced codon CAG is in red, with the nucleobases CA in the first exon and G in the second. Notice how the same A augmented eighth note triad both closes the first exon and opens the second.
+
+Thus far, we have demonstrated a novel means to conceptualize biological splicing by differentiating between UTRs, introns, and the CDSs, as well as emphasizing spliced codons. We now want to map codons in the CDS to chords in such a way that facilitaties the perception of biological translation. To do so,
+we consider the amino acids the codons specify. To distinguish between amino acids, we seek an injective mapping between amino acids and musical keys. We do this by first solely considering the set of essential and nonessential amino acids (with which we can create a bijective mapping with the set of possible keys), and separately considering the set of conditionally essential amino acids (with which we can create an injective mapping with the set of possible keys).
 
 Figures \ref{table:essential} and \ref{table:nonessential} explicate the chosen bijective mapping between the set of essential and nonessential amino acids and the set of possible keys. The codons that code for each amino acid are listed in the left hand column, and BioMus maps each to a major triad in the corresponding key in the right column. 
 
@@ -185,9 +193,33 @@ UGA & G \\ \hline
 \label{table:stop_codons}
 \end{table}
 
-Each stop codon chord is given a half note duration and the volume is halved to signify the end of the protein-coding region. The subsequent minor dyads in the 3' UTR return to quarter notes. 
+Each stop codon chord is given a half note duration and the volume is halved to signify the end of the protein-coding region. The subsequent minor dyads in the 3' UTR constituting the remainder of the gene return to quarter notes, and are in whatever key is dictated by the stop codon in Table \ref{table:stop_codons}. 
+
+
 
 \section{Sample Music}
+
+Figures \ref{fig:danio_rerio_start_translation} and \ref{fig:danio_rerio_end_translation} demonstrate the sonification of key sections in the TP53 tumor suppressor gene of the zebrafish \textit{Danio rerio}. The DNA sequence is shown above BioMus' sonification of each nucleobase or codon. Orange indicates a UTR, gray indicates an intron, and blue indicates the CDS. Red indicates CDS codons that are broken across splice sites. Alternating codons in the CDS are highlighted for visibility.
+
+Figure \ref{fig:danio_rerio_start_translation} begins with the fragment of the 5' UTR concluding the gene's first exon. Notice how the opening key is C minor. The nucleobases A and T map to the dyad C-E\musFlat \; (tonic-mediant), and the nucleobases A and T map to the dyad C-E\musFlat \; (tonic-mediant) dyad will consist of the notes C (tonic) and E\musFlat \; (mediant). Similarly, if we encounter the nucleobase C or G, then the dyad is E\musFlat \; and G (dominant). All UTR dyads are represented with quarter notes.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.48\textwidth]{images/danio_rerio_start_translation}
+\vspace{-3mm}
+  \caption{\textit{Danio rerio} TP53 Gene, Beginning of CDS}
+  \label{fig:danio_rerio_start_translation}
+  \vspace{-3mm}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.48\textwidth]{images/danio_rerio_end_translation}
+\vspace{-3mm}
+  \caption{\textit{Danio rerio} TP53 Gene, End of CDS}
+  \label{fig:danio_rerio_end_translation}
+  \vspace{-3mm}
+\end{figure}
 
 \section{Conclusion}
 BioMus serves as a bridge between bioinformatics, computer science, and music by giving scientists the creative means to 
