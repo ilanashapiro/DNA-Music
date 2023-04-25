@@ -31,24 +31,34 @@ issa2018@mymail.pomona.edu\\
 \begin{document} 
 \maketitle
 \begin{abstract}
-The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing bioinformaticians to perceptualize their data in a novel and illuminating manner. This paper presents BioMus, an original model for converting DNA to musical data in the form of MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and their CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in the CDS is mapped to a major or augmented triad based on the amino acid it codes for, individual nucleobases in introns are mapped to diminished triads, and individual nucleobases in UTRs are mapped to dyads outlining a minor triad. Rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are also at a higher volume. By mapping nucleobases and codons to chords and analyzing genetic material as music, BioMus thus gives scientists a novel and straightforward means to conceptualize the process of biological splicing and translation.
+The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing both scientists and the general public to perceptualize genomics in a novel and illuminating manner. This paper presents BioMus, an original model converting DNA to musical data as MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into their constituent exons and and introns. Exons are further parsed into their 5' and 3' untranslated regions (UTRs) and CDS (CoDing Sequence, i.e. the spliced exons constituting the amino acid-coding sequence after UTRs are removed). Then, each codon in the CDS is mapped to a major or augmented triad based on the amino acid it codes for, individual nucleobases in introns are mapped to diminished triads, and individual nucleobases in UTRs are mapped to dyads outlining a minor triad. Rhythmic alterations indicate when CDS codons are broken across splice sites. To further emphasize protein-coding regions, all CDS chords are at a higher volume. By mapping nucleobases and codons to musical chords, BioMus introduces a novel and straightforward means of conceptualizing the process of biological splicing and translation that is accessible to users of all scientific backgrounds.
 \end{abstract}
 
 \section{Introduction}
-Genes consist of sequences of double-stranded DNA, 
+Bioinformaticists constantly seek new ways to computationally represent and interpret genomic data. Representation of genetic sequences is primarily visual, with tools such as FluentDNA that visualize DNA sequences with the four nucleobases (adenine (A), cytosine (C), guanine (G) and thymine (T)) n colors.
+%https://www.frontiersin.org/articles/10.3389/fgene.2020.00292/full.
+Such methods generally involve a high degree of technical biological background to comprehend and are not accessible to a non-scientific audience. BioMus presents a novel means of conceptualizing genomics aurally, rather than visually, in a straightforward manner that emphasizes the processes of biological splicing and translation. BioMus' sonification model allows for a general audience, ranging from nontechnical to bioinformaticist, to integrate the nontraditional sense of hearing in understanding essential biological processes. It also offers visually impaired users who cannot access visual methods a newly illuminating perspective on genomics.
+
+BioMus takes in a DNA sequence of a single gene and converts it to a series of MIDI piano chords. Genes consist of sequences of double-stranded DNA, 
 %The double-stranded DNA helix is shaped like a ladder, where each rung consists of two complementary nucleotides paired together. 
-which is built with pairs of complementary nucleotides. Each DNA nucleotide is built on a $nucleobase$, namely adenine (A), cytosine (C), guanine (G) and thymine (T). The nucleobases have the complementary pairings C-G and A-T. 
+which are built with pairs of complementary nucleotides (C-G and A-T). 
 %The DNA helix consists of the \textit{coding strand} and the \textit{template strand}. The template strand codes for mRNA during $transcription$, where each nucleotide is converted to its complement, and thymine is replaced with the base uracil.% https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/transcription-and-rna-processing/a/overview-of-transcription
-DNA is converted to mRNA during $transcription$, and mRNA is converted to amino acids (the building blocks of proteins) during $translation$. Every gene codes for a single protein.
+DNA is converted to mRNA during $transcription$, and mRNA is converted to amino acids (the building blocks of proteins) during $translation$. Every gene codes for a single protein. 
 
-Eukaryiotic transcription includes a stage called \textit{RNA splicing}, where regions called $introns$ are removed, or ``spliced out," from the DNA sequence. The final ``mature" mRNA solely consists of the remaining regions, called exons, strung together. The exons comprising mature mRNA consist of two \textit{untranslated regions}, or UTRs, flanking the \textit{CoDing Sequence}, or CDS. The CDS 
-%is a sequence of nucleotides corresponding with the sequence of amino acids in a protein during translation. It 
-begins with the start codon (ATG) and terminates with a stop codon (TAA, TAG, or TGA). In the CDS, nucleotides grouped into three to create $codons$. Each codon codes for a single amino acid. The UTR preceding the CDS is called the \textit{5' UTR}, and the UTR following the CDS is called the \textit{3' UTR}.
+Eukaryiotic transcription includes a stage called \textit{RNA splicing}, where regions called $introns$ are removed, or ``spliced out," from the DNA sequence. The final ``mature" mRNA solely consists of the remaining regions, called exons, strung together. The exons comprising mature mRNA consist of two \textit{untranslated regions}, or UTRs, flanking the \textit{CoDing Sequence}, or CDS, which is the protein-coding region. 
+%The CDS is a sequence of nucleotides corresponding with the sequence of amino acids in a protein during translation. It begins with the start codon (ATG) and terminates with a stop codon (TAA, TAG, or TGA). 
+In the CDS, nucleotides are grouped into three to create $codons$. Each codon codes for a single amino acid. The UTR preceding the CDS is called the \textit{5' UTR}, and the UTR following the CDS is called the \textit{3' UTR}.
 
-Note that in the original DNA sequence, both the UTRs and the CDS may be spliced over multiple exons (i.e. they may be broken up by intervening introns). In the CDS, this means that individual codons may be broken across splice sites: the codon will begin at the end of one exon, and conclude at the beginning of the next.
+BioMus obtains gene sequences from Ensembl, a genome database of the European Bioinformatics Institute, using the Ensembl REST API. These sequences are subsequently parsed into their constituent exons and and introns, and exons are further parsed into their 5' and 3' UTRs and CDS. To convey the structure of the gene, individual nucleobases in introns are mapped to diminished triads, and individual nucleobases in UTRs are mapped to dyads outlining a minor triad. To convey translation, in the CDS, codons rather than individual nucleobases are mapped to major or augmented triads given the amino acids they code for. 
+%The opening and closing chords corresponding to start and stop codons in the CDS are also doubled in length as signposts of translation.
+%To further emphasize protein-coding regions, all CDS chords are also at a higher volume. 
 
-Figure \ref{fig:gene} shows the splicing process for a sample gene. 
-\vspace{-3mm}
+Note that in the original DNA sequence, both the UTRs and the CDS may be spliced over multiple exons (i.e. they may be broken up by intervening introns). In the CDS, this means that individual codons may be broken across splice sites: the codon will begin at the end of one exon, and conclude at the beginning of the next. 
+
+Figure \ref{fig:gene} shows the splicing process for a sample gene. The top sequence in Figure \ref{fig:gene} presents the pre-transcription DNA sequence, and the bottom sequence presents the result of splicing using \textit{complementary DNA}, or cDNA. A cDNA sequence is complementary to its source mRNA sequence;
+% and contains thymine rather than uracil
+it is identical to the noncoding DNA strand without introns. Biologists synthesize cDNA from mRNA to work with the sequence more conveniently.
+
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.48\textwidth]{images/gene.png}
@@ -56,15 +66,22 @@ Figure \ref{fig:gene} shows the splicing process for a sample gene.
   \vspace{-3mm}
 \end{figure}
 
-The top sequence in Figure \ref{fig:gene} presents the pre-transcription DNA sequence, and the bottom sequence presents the result of splicing using \textit{complementary DNA}, or cDNA. A cDNA sequence is complementary to its source mRNA sequence;
-% and contains thymine rather than uracil
-it is identical to the noncoding DNA strand without introns. Biologists synthesize cDNA from mRNA to work with the sequence more conveniently.
 
-In Figure \ref{fig:gene}, exons are in color, while introns are gray. The UTRs are orange, and the CDS is blue or red. Red nucleobases in the CDS indicate codons that are broken across splice sites. Notice how the 5' UTR is broken across the first two two exons, and the CDS is broken across the final four exons. Alternating highlights in the CDS are used for visibility of codons.  After excising the introns from the gene, we end up with the contiguous sequence of exons at the bottom of Figure \ref{fig:gene}. The black vertical bars indicate splice sites.
+
+In Figure \ref{fig:gene}, exons are in color, while introns are gray. The UTRs are orange, and the CDS is blue or red. Red nucleobases in the CDS indicate codons that are broken across splice sites. Notice how the 5' UTR is broken across the first two two exons, and the CDS spans the final four exons. Alternating highlights in the CDS are used for visibility of codons.  After excising the introns from the gene, the result is the contiguous sequence of exons at the bottom of Figure \ref{fig:gene}. The black vertical bars indicate splice sites. To perceptualize splicing, BioMus splits the chord for a spliced codon into half its original duration and places it at each end of the splice site: the chord will both close the exon that begins the codon and open the next exon that completes the codon. 
+
+In this paper, we begin by examining relevant work in the field, and subsequently discuss the process of sourcing genetic data from the Ensembl database and its conversion to musical chords. Finally, examples of BioMus' sonification model are presented. 
 
 \section{Related Work}
 
 Ingalls et al. present 
+
+%https://dl.gi.de/bitstream/handle/20.500.12116/20313/93.pdf
+
+%https://genomebiology.biomedcentral.com/articles/10.1186/gb-2007-8-5-405
+
+%https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-021-05685-7
+
 \section{Converting DNA to Music}
 \subsection{Obtaining Genetic Data}
 BioMus's process of DNA sonification begins with the user specifying a desired species and gene. This information is passed to Ensembl's REST API to obtain Ensembl's choromomal coordinates of the gene's exons. These coordinates are sourced from the gene's \textit{canonical transcript}, the gene's transcript in Ensembl that is overall the most conserved and highly expressed, has the longest CDS, and is also represented in other major databases such as the NCBI \cite{ensembl_transcript_flags}. The exon coordinates also define the chromosomal coordinates of the intervening introns. Each pair of exon and intron coordinates is passed back to the Ensembl REST API to obtain the nucleobase sequences for each region, and the result is a list of alternating exons and introns. For instance, consider the abbreviated sequence obtained from Ensembl for the \textit{Homo sapiens} (human) TP53 tumor suppressor gene in Figure \ref{fig:pre_processed_seq_homo_sapiens_tp53}. Ellipses indicate omitted nucleobases for the sake of example.
@@ -114,7 +131,7 @@ The dyad corresponding to each nucleobase in a UTR is constructed with its base 
 
 To construct the diminished triads in introns, BioMus again uses the mapping of individual nucleobases to musical notes in Table  \ref{table:nucleobases}. Initially, a dyad is constructed as in the UTRs (except with the dominant scale degree lowered a half step to form a diminished rather than a perfect fifth with the tonic). Then, we also add the diminished seventh scale degree from the local key to each dyad to construct the diminished triads. For instance, if the key is C minor and we encounter the nucleobase C or G, then the triad will consist of the notes C (tonic), E\musFlat \; (mediant), and B\musDoubleFlat\; (diminished seventh). Similarly, if we encounter the nucleobase A or T, then the triad will consist of the notes E\musFlat, G\musFlat \; (dominant), and B\musDoubleFlat. We use the term ``diminished triad" loosely here, since technically only the latter triad described fits the formal definition of a diminished triad, with two minor thirds stacked on top of one another. However, as both chords outline a diminished seventh chord, their sonority is similar enough that we dub them both diminished triads as a way of distinguishing them from major or minor chords. Like UTRs, all intron triads are represented with quarter notes. 
 
-When the CDS begins, we map codons (groups of three nucleobases), rather than individual nucleobases, to chords. The first codon in the CDS is always ATG, the start codon, which is mapped to a C major triad and is given a half note duration, rather than a quarter note, to signify the start of the protein-coding region. Subsequent chords return to quarter notes. To further emphasize we are in a protein-coding region, the volume is doubled throughout the CDS. The volume is halved to its original value whenever we encounter an intron, and doubled again when we return to the CDS in the next exon. 
+When the CDS begins, we map codons (groups of three nucleobases), rather than individual nucleobases, to chords. The first codon in the CDS is always ATG, the start codon, which is mapped to a C major triad and is given a half note duration, rather than a quarter note, as a signpost of the beginning of translation. Subsequent chords return to quarter notes. To further emphasize we are in a protein-coding region, the volume is doubled throughout the CDS. The volume is halved to its original value whenever we encounter an intron, and doubled again when we return to the CDS in the next exon. 
 
 We also consider the scenario where the final codon of an exon in the CDS is broken across a splice site (i.e. the codon is split by the intervening intron). When an incomplete codon is encountered at the end of an exon in the CDS, the subsequent exon is referenced for the remainder of the codon. The spliced codon is then represented with an eighth note triad rather than a quarter note, and the same eighth note triad is played at the beginning of the next exon to indicate that the remainder of the codon is found there. This scenario is detailed in Figure \ref{fig:splice_site_example}, where exons are represented in color and introns are in gray. 
 
@@ -225,7 +242,7 @@ From here, each CDS codon maps to a major or augmented triad based on tables \re
 
 Then, notice how the codon ATT, which codes for the essential amino acid isoleucine and maps to the C\musSharp\; major triad in red, is broken across the splice site between the second and third exons. The intervening intron assumes the key of the final codon of the previous exon and thus outlines a C\musSharp \; diminished seventh chord. 
 
-Finally, notice how the third exon begins with the other ``half" (i.e.  remaining eighth note) of the C\musSharp\; major triad of the spliced ATT codon. This exon concludes with the complete codon GAG, which again codes for glutamine and maps to an A augmented triad in Table \ref{table:conditionally_essential}. The following intron also assumes the key of A outlines an A \; diminished seventh chord.
+Finally, notice how the third exon begins with the other ``half" (i.e.  remaining eighth note) of the C\musSharp\; major triad of the spliced ATT codon. This exon concludes with the complete codon GAG, which again codes for glutamine and maps to an A augmented triad in Table \ref{table:conditionally_essential}. The following intron assumes the same key of A, and outlines an A \; diminished seventh chord. Notably, if played, the volume in the CDS would be doubled relative to the rest of the sequence.
 
 Figure \ref{fig:danio_rerio_end_translation} shows a fragment of the exon containing the end of the CDS. 
 
@@ -241,7 +258,7 @@ Figure \ref{fig:danio_rerio_end_translation} shows a fragment of the exon contai
 The CDS terminates with the stop codon TAA, which maps to a C minor triad in Table \ref{table:stop_codons}. Notice how TAA maps to a half, rather than a quarter, note to signify the end of the protein-coding region. After this, we immediately enter the 3' UTR, which assumes the key of the stop codon and thus produces dyads outlining a C minor triad. 
 
 \section{Conclusion}
-BioMus serves as a bridge between bioinformatics, computer science, and music by giving scientists a novel, creative means to conceptualize the biological processes of DNA splicing and translation.
+BioMus serves as a bridge between bioinformatics, computer science, and music by giving both scientists and the general public a novel, creative means to conceptualize the biological processes of DNA splicing and translation.
 
 
 \section{Acknowledgments}
