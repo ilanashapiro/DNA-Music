@@ -74,13 +74,19 @@ In this paper, we begin by examining relevant work in the field, and subsequentl
 
 \section{Related Work}
 
-Ingalls et al. present 
+Sonofication of genetic material has been approached from a variety of angles. To specifically address accessibility of science to a wider audience, Takahashi and Miller converted genome-encoded protein sequences to piano notes in order to produce musical patterns that still adhere to the structure of the sequences. Like BioMus, Takahashi and Miller mapped codons in the CDS to chords. However, their scheme mapped pairs of amino acids to triads, with differing inversions distinguished individual amino acids within the pairs. The duration of each triad correlated to the frequency of its corresponding codon in the CDS. Unlike BioMus, Takahashi and Miller only consider the CDS, and do not consider how to represent spliced codons. %https://genomebiology.biomedcentral.com/articles/10.1186/gb-2007-8-5-405
+
+
+In another sonification model, Ingalls et al. consider the sequence alignment problem, in which genetic sequences from the same gene but different species are compared to identify regions of similarity. Their tool \textsc{ComposAlign} translates genome-wide aligned data into a musical composition using a unique mapping of alignment information onto musical features. Their approach sonifies the presence and absence of nucleotides or amino acids in the alignment such that their assignment to the corresponding sequence (i.e. species) is clear. By mapping each character to a measure-long motif, rather than a single note or chord, \textsc{ComposAlign} achieves an increases degree of freedom of encoding
+
+Large-scale genenomic data, for instance, 
+ that sonifies large-scale genomic data
 
 %https://dl.gi.de/bitstream/handle/20.500.12116/20313/93.pdf
 
-%https://genomebiology.biomedcentral.com/articles/10.1186/gb-2007-8-5-405
 
-%https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-021-05685-7
+
+%https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-0 w21-05685-7
 
 \section{Converting DNA to Music}
 \subsection{Obtaining Genetic Data}
@@ -150,6 +156,7 @@ we consider the amino acids the codons specify. To distinguish between amino aci
 
 Figures \ref{table:essential} and \ref{table:nonessential} explicate the chosen bijective mapping between the set of essential and nonessential amino acids and the set of possible keys. The codons that code for each amino acid are listed in the left hand column, and BioMus maps each to a major triad in the corresponding key in the right column. 
 
+\vspace{-2mm}
 \begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|l|}
@@ -167,7 +174,7 @@ GTT, GTC, GTA, GTG &  Valine                      & A\musFlat  \\ \hline
 \caption{Essential Amino Acids}
 \label{table:essential}
 \end{table}
-
+\vspace{-5mm}
 \begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|l|}
@@ -179,7 +186,7 @@ GCT, GCC, GCA, GCG & Alanine    & B                        \\ \hline
 \caption{Nonessential Amino Acids}
 \label{table:nonessential}
 \end{table}
-
+\vspace{-2mm}
 
 Next, we consider the set of nonessential amino acids. Tables \ref{table:essential} and \ref{table:nonessential} explicate the chosen injective mapping between this set and the set of possible keys. Notice that the mapping is also bijective between the nonessential amino acids and the set of natural keys. 
 
@@ -197,12 +204,14 @@ GGT, GGC, GGA, GGG & Glycine                 & B \\ \hline
 \end{tabular}
 \caption{Conditionally Essential Amino Acids}
 \label{table:conditionally_essential}
+\vspace{-5mm}
 \end{table}
 
 This time, BioMus maps each codon to an augmented triad, rather than a major triad, in the corresponding key in the right column. 
 
-Finally, we consider the stop codons, which do not code for amino acids and instead terminate the CDS. They are mapped to minor triads in the keys explicated in Table \ref{table:stop_codons}. 
 
+Finally, we consider the stop codons, which do not code for amino acids and instead terminate the CDS. They are mapped to minor triads in the keys explicated in Table \ref{table:stop_codons}. 
+\vspace{-2mm}
 \begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|}
@@ -214,6 +223,7 @@ UGA & G \\ \hline
 \caption{Stop Codons}
 \label{table:stop_codons}
 \end{table}
+\vspace{-3mm}
 
 Each stop codon chord is given a half note duration and the volume is halved to signify the end of the protein-coding region. The subsequent minor dyads in the 3' UTR constituting the remainder of the gene return to quarter notes, and are in whatever key is dictated by the stop codon in Table \ref{table:stop_codons}. 
 
@@ -260,7 +270,7 @@ The CDS terminates with the stop codon TAA, which maps to a C minor triad in Tab
 \section{Conclusion}
 BioMus serves as a bridge between bioinformatics, computer science, and music by giving both scientists and the general public a novel, creative means to aurally conceptualize the biological processes of DNA splicing and translation. The structure of the gene and its splice regions are illuminated by respectively mapping individual nucleotides in UTRs and introns to diminished chords and minor dyads, and breaking chords across splice sites just as their corresponding codons are. Translation is conveyed by mapping codons to major and augmented chords in the CDS based on the amino acids they code for. The chosen injective mapping between codons and musical keys also allows the listener to distinguish between essential, nonessential, and conditionally essential amino acids. BioMus' straightforward sonification model allows users to conceptualize the structure of DNA and the processes of splicing and translation whether or not they are career scientists, and opens to the door for visually impaired users to access these concepts without being constricted by traditional visual methods of genomic representation. 
 
-In the future, BioMus would ideally sonify a greater variety and granularity of genomic structures. For instance, known mutations could be marked with dissonance. Furthermore, given a sample sequence and a target sequence, the similar regions of the sample sequence resulting alignment with the target could be marked aurally by both new harmonies and rhythms. Finally, BioMus' current sonification scheme is intentionally linear to align with its vision of straightforward representation. Going forward, BioMus could benefit from modifying this scheme to integrate more complex rhythms and a larger sonic range, while still maintaining a clear musical distinction between genetic structures, in order to increase the musicality of its results.
+In the future, BioMus would ideally sonify a greater variety and granularity of genomic structures. For instance, known mutations could be marked with dissonance. Furthermore, given a sample sequence and a target sequence, the similar regions of the sample sequence resulting from alignment with the target could be marked aurally by both new harmonies and rhythms. Finally, BioMus' current sonification scheme is intentionally linear to align with its vision of straightforward representation. Going forward, BioMus could benefit from modifying this scheme to integrate more complex rhythms and a larger sonic range, while still maintaining a clear musical distinction between genetic structures, in order to increase the musicality of its results.
 
 
 \section{Acknowledgments}
