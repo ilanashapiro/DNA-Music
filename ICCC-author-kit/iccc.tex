@@ -74,19 +74,12 @@ In this paper, we begin by examining relevant work in the field, and subsequentl
 
 \section{Related Work}
 
-Sonofication of genetic material has been approached from a variety of angles. To specifically address accessibility of science to a wider audience, Takahashi and Miller converted genome-encoded protein sequences to piano notes in order to produce musical patterns that still adhere to the structure of the sequences. Like BioMus, Takahashi and Miller mapped codons in the CDS to chords. However, their scheme mapped pairs of amino acids to triads, with differing inversions distinguished individual amino acids within the pairs. The duration of each triad correlated to the frequency of its corresponding codon in the CDS. Unlike BioMus, Takahashi and Miller only consider the CDS, and do not consider how to represent spliced codons. %https://genomebiology.biomedcentral.com/articles/10.1186/gb-2007-8-5-405
+Sonofication of genetic material has been approached from a variety of angles. To specifically address accessibility of genomics to a wider audience, Takahashi and Miller converted genome-encoded protein sequences to piano notes in order to produce musical patterns that still adhere to the structure of the sequences. Like BioMus, Takahashi and Miller mapped codons in the CDS to chords. However, their scheme mapped pairs of amino acids to triads, with differing inversions distinguished individual amino acids within the pairs. The duration of each triad correlated to the frequency of its corresponding codon in the CDS. Unlike BioMus, Takahashi and Miller only consider the CDS, and do not consider how to represent spliced codons. %https://genomebiology.biomedcentral.com/articles/10.1186/gb-2007-8-5-405
 
 
-In another sonification model, Ingalls et al. consider the sequence alignment problem, in which genetic sequences from the same gene but different species are compared to identify regions of similarity. Their tool \textsc{ComposAlign} translates genome-wide aligned data into a musical composition using a unique mapping of alignment information onto musical features. Their approach sonifies the presence and absence of nucleotides or amino acids in the alignment such that their assignment to the corresponding sequence (i.e. species) is clear. By mapping each character to a measure-long motif, rather than a single note or chord, \textsc{ComposAlign} achieves an increases degree of freedom of encoding
+Plaisier et al. also seek to increase accessibility to genomics by proposing a sonification model that is both entertaining and informative. They map each nucleotide to a specific note to bridge the gap between the monotonous appearance of traditional DNA sequence visualizations and the excitement expected in a display by a public audience. By using the Sonic Pi program for sonification, they crucially support real-time customization of the program, providing a link between DNA and live programming to further enhance public engagement. BioMus' sonification model perceptualizes a wider variety of bioligical structures than Plaisier et al.'s model %https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-0 w21-05685-7
 
-Large-scale genenomic data, for instance, 
- that sonifies large-scale genomic data
-
-%https://dl.gi.de/bitstream/handle/20.500.12116/20313/93.pdf
-
-
-
-%https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-0 w21-05685-7
+In another sonification model, Ingalls et al. consider the sequence alignment problem, in which genetic sequences from the same gene but different species are compared to identify regions of similarity. Their tool \textsc{ComposAlign} translates genome-wide aligned data into a musical composition using a unique mapping of alignment information onto musical features. Their approach sonifies the presence and absence of nucleotides or amino acids in the alignment such that their assignment to the corresponding sequence (i.e. species) is clear. By mapping each character to a measure-long motif, rather than a single note or chord, \textsc{ComposAlign} achieves mapping rules that are modular and flexible. Sequence alignment is outside the scope of BioMus' current scheme, but may be an intriguing future direction. %https://dl.gi.de/bitstream/handle/20.500.12116/20313/93.pdf
 
 \section{Converting DNA to Music}
 \subsection{Obtaining Genetic Data}

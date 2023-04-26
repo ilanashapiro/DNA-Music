@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  26 APR 2023 13:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  26 APR 2023 16:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -261,10 +261,10 @@ File: images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type
 png)
 <use images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png>
 Package pdftex.def Info: images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png 
- used on input line 98.
+ used on input line 90.
 (pdftex.def)             Requested size: 242.82503pt x 102.71655pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 98--99
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 90--91
  [][] 
  []
 
@@ -274,69 +274,50 @@ File: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type
  png)
 <use images/post_processed_seq_homo_sapiens_tp53_ABBREV.png>
 Package pdftex.def Info: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png
-  used on input line 109.
+  used on input line 101.
 (pdftex.def)             Requested size: 242.82503pt x 130.2446pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 109--111
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 101--103
  [][] 
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
 [2 <./images/gene.png> <./images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png
 >]
-<images/splice_site_example.png, id=20, 630.355pt x 124.465pt>
+<images/splice_site_example.png, id=19, 630.355pt x 124.465pt>
 File: images/splice_site_example.png Graphic file (type png)
 <use images/splice_site_example.png>
-Package pdftex.def Info: images/splice_site_example.png  used on input line 147
+Package pdftex.def Info: images/splice_site_example.png  used on input line 139
 .
 (pdftex.def)             Requested size: 192.24066pt x 37.95891pt.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[3 <./images/post_processed_seq_homo_sapiens_tp53_ABBREV.png> <./images/splice_
-site_example.png>]
+ [3 <./images/post_processed_seq_homo_sapiens_tp53_ABBREV.png> <./images/splice
+_site_example.png>]
 <images/danio_rerio_start_translation.png, id=27, 863.225pt x 440.64626pt>
 File: images/danio_rerio_start_translation.png Graphic file (type png)
 <use images/danio_rerio_start_translation.png>
 Package pdftex.def Info: images/danio_rerio_start_translation.png  used on inpu
-t line 241.
+t line 233.
 (pdftex.def)             Requested size: 242.82503pt x 123.95161pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 241--243
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 233--235
  [][] 
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-<images/danio_rerio_end_translation.png, id=28, 536.0025pt x 88.33pt>
+[4 <./images/danio_rerio_start_translation.png>]
+<images/danio_rerio_end_translation.png, id=32, 536.0025pt x 88.33pt>
 File: images/danio_rerio_end_translation.png Graphic file (type png)
 <use images/danio_rerio_end_translation.png>
 Package pdftex.def Info: images/danio_rerio_end_translation.png  used on input 
-line 262.
+line 254.
 (pdftex.def)             Requested size: 242.82503pt x 40.01498pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 262--264
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 254--256
  [][] 
  []
 
-[4 <./images/danio_rerio_start_translation.png> <./images/danio_rerio_end_trans
-lation.png>] (./iccc.bbl) [5
+(./iccc.bbl
+Underfull \vbox (badness 2635) has occurred while \output is active []
 
-] (./iccc.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+) [5 <./images/danio_rerio_end_translation.png>] (./iccc.aux) ) 
 Here is how much of TeX's memory you used:
  4510 strings out of 478268
  77950 string characters out of 5846346
@@ -345,14 +326,15 @@ Here is how much of TeX's memory you used:
  486896 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  68i,14n,77p,1372b,365s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
-xlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.pfb></usr/local
-/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix16.pfb></usr/lo
-cal/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texliv
-e/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/tex
-mf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on iccc.pdf (5 pages, 1542628 bytes).
+{/usr/local/texl
+ive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2022/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-d
+ist/fonts/type1/public/musixtex-fonts/musix11.pfb></usr/local/texlive/2022/texm
+f-dist/fonts/type1/public/musixtex-fonts/musix16.pfb></usr/local/texlive/2022/t
+exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/
+fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
+1/urw/times/utmri8a.pfb>
+Output written on iccc.pdf (5 pages, 1543605 bytes).
 PDF statistics:
  64 PDF objects out of 1000 (max. 8388607)
  32 compressed objects within 1 object stream
