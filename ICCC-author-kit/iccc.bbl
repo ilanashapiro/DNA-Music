@@ -14,10 +14,41 @@ Ensembl.
 \newblock {\em European Molecular Biology Laboratory - European Bioinformatics
   Institute}.
 
-\bibitem[\protect\citeauthoryear{Miranda}{2020}]{10.1162/artl_a_00325}
-Miranda, E.~R.
+\bibitem[\protect\citeauthoryear{Ingalls \bgroup et al.\egroup
+  }{2009}]{mci/Ingalls2009}
+Ingalls, T.; Martius, G.; Hellmuth, M.; Marz, M.; and Prohaska, S.~J.
+\newblock 2009.
+\newblock Converting dna to music: Composalign.
+\newblock In Grosse, I.; Neumann, S.; Posch, S.; Schreiber, F.; and Stadler,
+  P., eds., {\em German conference on bioinformatics 2009},  93--103.
+\newblock Bonn: Gesellschaft für Informatik e.V.
+
+\bibitem[\protect\citeauthoryear{KhanAcademy}{2016}]{khan_academy_2016}
+KhanAcademy.
+\newblock 2016.
+\newblock {Overview of transcription}.
+\newblock {\em Khan Academy}.
+
+\bibitem[\protect\citeauthoryear{Plaisier, Meagher, and
+  Barker}{2021}]{plaisier_meagher_barker_2021}
+Plaisier, H.; Meagher, T.~R.; and Barker, D.
+\newblock 2021.
+\newblock {DNA sonification for public engagement in Bioinformatics}.
+\newblock {\em Genome Biology}.
+
+\bibitem[\protect\citeauthoryear{Seaman and Buggs}{2020}]{seaman_buggs_2020}
+Seaman, J., and Buggs, R.~J.
 \newblock 2020.
-\newblock {Genetic Music System with Synthetic Biology}.
-\newblock {\em Artificial Life} 26(3):366--390.
+\newblock {FluentDNA: Nucleotide visualization of whole genomes, annotations,
+  and alignments}.
+\newblock {\em Frontiers}.
+
+\bibitem[\protect\citeauthoryear{Takahashi and
+  Miller}{2007}]{takahashi_miller_2007}
+Takahashi, R., and Miller, J.~H.
+\newblock 2007.
+\newblock {Conversion of amino-acid sequence in proteins to classical music:
+  Search for auditory patterns}.
+\newblock {\em Genome Biology}.
 
 \end{thebibliography}
