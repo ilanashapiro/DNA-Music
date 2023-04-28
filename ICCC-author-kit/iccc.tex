@@ -32,13 +32,12 @@ issa2018@mymail.pomona.edu\\
 \begin{document} 
 \maketitle
 \begin{abstract}
-The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing scientists and non-scientists alike to perceptualize genomics in a novel and illuminating manner. This paper presents BioMus, an original model converting DNA to musical data as MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into their constituent exons and and introns. Exons are further parsed into their 5’ and 3’ untranslated regions (UTRs) and CDS (CoDing Sequence,
-i.e. the protein-coding region). Then, each codon in the CDS is mapped to a major or augmented triad based on the amino acid it codes for, and individual nucleotides in introns and UTRs are respectively mapped to diminished triads and dyads outlining a minor triad. Rhythmic alterations indicate when CDS codons are spliced. To further emphasize protein- coding regions, all CDS chords are played at a higher volume. By mapping nucleotides and codons to musical chords, BioMus introduces a novel and straightforward means of conceptualizing both the structure of a gene and the processes of biological splicing and translation that is accessible to users of all scientific backgrounds.
+The sonification of genetic material is a little-explored mode of unconventional computation that bridges the divide between bioinformatics, computer science, and music, allowing scientists and non-scientists alike to perceptualize genomics in a novel and illuminating manner. This paper presents BioMus, an original model converting DNA to musical data as MIDI piano chords. Gene sequences are sourced from Ensembl, a genome database of the European Bioinformatics Institute, and are parsed into their constituent exons and and introns. Exons are further parsed into their 5’ and 3’ untranslated regions (UTRs) and CDS (CoDing Sequence, i.e. the protein-coding region). Then, each codon in the CDS is mapped to a major or augmented triad based on the amino acid it codes for, and individual nucleotides in introns and UTRs are respectively mapped to diminished triads and dyads outlining a minor triad. Rhythmic alterations indicate when CDS codons are spliced. To further emphasize protein- coding regions, all CDS chords are played at a higher volume. By mapping nucleotides and codons to musical chords, BioMus introduces a novel and straightforward means of conceptualizing both the structure of a gene and the processes of biological splicing and translation that is accessible to users of all scientific backgrounds.
 
 \end{abstract}
 
 \section{Introduction}
-Bioinformaticists constantly seek new ways to computationally represent and interpret genomic data. Representation of genetic sequences is primarily visual, with tools such as SnapGene that visualize DNA sequences with the four nucleotides (adenine (A), cytosine (C), guanine (G) and thymine (T)) in colors %\cite{https://ostr.ccr.cancer.gov/bioinformatics/software/snapgene/}
+Bioinformaticists constantly seek new ways to computationally represent and interpret genomic data. Representation of genetic sequences is primarily visual, with tools such as SnapGene that visualize DNA sequences with the four nucleotides (adenine (A), cytosine (C), guanine (G) and thymine (T)) in colors \cite{goldstein_2023}.
 Comprehending such visual methods generally requires a high degree of technical background, thus limiting the audience. BioMus presents a novel means of conceptualizing genomics aurally, rather than visually, in a straightforward manner that emphasizes the processes of biological splicing and translation. By bridging the divide between bioinformatics, computer science, and music, BioMus’ sonification model makes the structure of a gene and the essential biological processes of splicing and translation accessible to a wide-ranging audience. It particularly offers visually impaired users a newly illuminating perspective on genomics.
 
 BioMus takes in a DNA sequence of a single gene and converts it to a series of MIDI piano chords. Genes consist of sequences of double-stranded DNA, which fare built with pairs of complementary nucleotides (C-G and A-T). 
@@ -46,9 +45,9 @@ BioMus takes in a DNA sequence of a single gene and converts it to a series of M
 %The DNA helix consists of the \textit{coding strand} and the \textit{template strand}. The template strand codes for mRNA during $transcription$, where each nucleotide is converted to its complement, and thymine is replaced with the base uracil.% https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/transcription-and-rna-processing/a/overview-of-transcription
 DNA is converted to mRNA during transcription, and mRNA is converted to amino acids (the building blocks of proteins) during translation. Eukaryiotic transcription includes a stage called RNA splicing, where regions known as introns are removed, or “spliced out,” from the DNA sequence. The final “mature” mRNA consists of the remaining regions, called exons, strung together. The exons comprising mature mRNA consist of two untranslated regions, or UTRs, flanking the CoDing Sequence, or CDS, that codes for proteins. 
 %The CDS is a sequence of nucleotides corresponding with the sequence of amino acids in a protein during translation. It begins with the start codon (ATG) and terminates with a stop codon (TAA, TAG, or TGA). 
-The UTR preceding the CDS is the 5’ UTR, and the UTR following the CDS is the 3’ UTR \cite{}.
+The UTR preceding the CDS is the 5’ UTR, and the UTR following the CDS is the 3’ UTR \cite{clancy_2008,clancy_brown_2008}.
 
-BioMus obtains gene sequences from Ensembl, a genome database of the European Bioinformatics Institute. These sequences are parsed into their constituent exons and introns, and then exons are further parsed into their 5’ and 3’ UTRs and CDS. To convey the structure of the gene, individual nucleotides in introns and UTRs are mapped to diminished triads and dyads (two-note chords) outlining a minor triad, respectively. To convey translation, codons, rather than individual nucleotides, in the CDS are mapped to major or augmented triads based on the amino acids they code for.
+BioMus obtains gene sequences from Ensembl, a genome database of the European Bioinformatics Institute  \cite{birney_et_al_2004}. These sequences are parsed into their constituent exons and introns, and then exons are further parsed into their 5’ and 3’ UTRs and CDS. To convey the structure of the gene, individual nucleotides in introns and UTRs are mapped to diminished triads and dyads (two-note chords) outlining a minor triad, respectively. To convey translation, codons, rather than individual nucleotides, in the CDS are mapped to major or augmented triads based on the amino acids they code for.
 %The opening and closing chords corresponding to start and stop codons in the CDS are also doubled in length as signposts of translation.
 %To further emphasize protein-coding regions, all CDS chords are also at a higher volume. 
 
@@ -188,9 +187,12 @@ GAA, GAG & Glutamate    & B                        \\ \hline
 \end{table}
 \vspace{-2mm}
 
-In order to achieve the bijective mapping, we simplify the alphabet of amino acids by grouping isuleucine and leucine together, since they are the most similar amino acids by Grantham's distance, a measure of evolutionary distance integrating composition, polarity and molecular volume. Next, we consider the set of conditionally essential amino acids. Table \ref{table:conditionally_essential} explicates BioMus' injective mapping between this set and the set of possible keys. Notice that the mapping is also bijective between the set of conditionally essential amino acids and the set of natural keys. 
+In order to achieve the bijective mapping, we simplify the alphabet of amino acids by grouping isuleucine and leucine together, since they are the most similar amino acids by Grantham's distance, a measure of evolutionary distance integrating composition, polarity and molecular volume \cite{grantham_1974}. 
+
+Next, we consider the set of conditionally essential amino acids. Table \ref{table:conditionally_essential} explicates BioMus' injective mapping between this set and the set of possible keys. Notice that the mapping is also bijective between the set of conditionally essential amino acids and the set of natural keys. 
 
 \begin{table}[h!]
+\vspace{-2mm}
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
@@ -214,7 +216,7 @@ Finally, we consider the stop codons, which solely serve to terminate the CDS. T
 
 \begin{table}[h!]
 \centering
-\vspace{-3mm}
+\vspace{-2mm}
 \begin{tabular}{|l|l|}
 \hline
 UAA & C \\ \hline
@@ -234,8 +236,8 @@ Figure \ref{fig:danio_rerio_start_translation} begins with the fragment of the 5
 
 \begin{figure}[h!]
 \centering
+\vspace{-2mm}
 \includegraphics[width=0.48\textwidth]{images/danio_rerio_start_translation}
-\vspace{-3mm}
   \caption{\textit{Danio rerio} TP53 Gene, Beginning of CDS}
   \label{fig:danio_rerio_start_translation}
   \vspace{-3mm}
@@ -244,9 +246,7 @@ Figure \ref{fig:danio_rerio_start_translation} begins with the fragment of the 5
 Note that the opening key is C minor. The nucleotides  A and T map to the dyad C-E\musFlat \;(tonic-mediant), and the nucleotides G and G map to the dyad E\musFlat-G (mediant-dominant). We then enter the gray region of the first intron, where diminished triads outline the C diminished seventh chord (notice how the perfect fifth G above the tonic becomes the diminished fifth G\musFlat, and each triad includes the addition of the diminished seventh B\musDoubleFlat).
 
 
-The second exon begins with the last two nucleotides of the 5’ UTR, which again outlines the C minor triad, before beginning the CDS with the start codon ATG, which maps to a C major triad as in Table \ref{table:essential}. Note that ATG maps to a half note, rather than a quarter note to signify the start of the protein-coding region.
-
-From here, each CDS codon maps to a major or augmented triad based on Tables  \ref{table:essential} - \ref{table:conditionally_essential}. For instance, GCG codes for the nonessential amino acid alanine, which maps to a B major triad in Table 3, while GAG codes for the conditionally essential amino acid glutamine, which maps to an A augmented triad as in Table \ref{table:conditionally_essential}.
+The second exon begins with the last two nucleotides of the 5’ UTR, which again outlines the C minor triad, before beginning the CDS with the start codon ATG, which maps to a C major triad as in Table \ref{table:essential}. Note that ATG maps to a half note, rather than a quarter note to signify the start of the protein-coding region. From here, each CDS codon maps to a major or augmented triad based on Tables  \ref{table:essential}-\ref{table:conditionally_essential}. For instance, GCG codes for the nonessential amino acid alanine, which maps to a B\musFlat\; major triad in Table \ref{table:nonessential}, while CAA codes for the conditionally essential amino acid glutamine, which maps to an A augmented triad as in Table \ref{table:conditionally_essential}.
 
 Then, notice how ATT, which codes for the essential amino acid isoleucine and maps to the red C\musSharp\; major triad, is broken across the splice site between the second and third exons. The intervening intron assumes the key dictated by this final (albeit incomplete) codon, and thus outlines a C\musSharp \; diminished seventh chord. The third exon then begins with the other ``half" (i.e.  remaining eighth note) of the C\musSharp\; major triad of the spliced ATT codon. This exon concludes with the complete codon GAG, which again codes for glutamine and maps to an A augmented triad as in Table \ref{table:conditionally_essential}. The following intron assumes the same key of A, and outlines an A \; diminished seventh chord. Notably, if played, the volume in the CDS would be doubled.
 

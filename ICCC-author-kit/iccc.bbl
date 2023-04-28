@@ -1,5 +1,25 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Birney \bgroup et al.\egroup
+  }{2004}]{birney_et_al_2004}
+Birney, E.; Andrews, T.~D.; Bevan, P.; Caccamo, M.; Chen, Y.; Clarke, L.;
+  Coates, G.; Cuff, J.; Curwen, V.; Cutts, T.; and et~al.
+\newblock 2004.
+\newblock {An Overview of Ensembl}.
+\newblock {\em Genome Research} 14(5):925–928.
+
+\bibitem[\protect\citeauthoryear{Clancy and Brown}{2008}]{clancy_brown_2008}
+Clancy, S., and Brown, W.
+\newblock 2008.
+\newblock {Translation: DNA to mRNA to Protein}.
+\newblock {\em Nature Education} 1(1):101.
+
+\bibitem[\protect\citeauthoryear{Clancy}{2008}]{clancy_2008}
+Clancy, S.
+\newblock 2008.
+\newblock {RNA Splicing: Introns, Exons and Spliceosome}.
+\newblock {\em Nature Education} 1(1):31.
+
 \bibitem[\protect\citeauthoryear{Ensembl}{2023a}]{ensembl_glossary}
 Ensembl.
 \newblock 2023a.
@@ -14,6 +34,19 @@ Ensembl.
 \newblock {\em European Molecular Biology Laboratory - European Bioinformatics
   Institute}.
 
+\bibitem[\protect\citeauthoryear{Goldstein, Malik, and
+  Foley}{2023}]{goldstein_2023}
+Goldstein, D.; Malik, M.; and Foley, J.
+\newblock 2023.
+\newblock Snapgene.
+\newblock {\em Office of Science and Technology Resources}.
+
+\bibitem[\protect\citeauthoryear{Grantham}{1974}]{grantham_1974}
+Grantham, R.
+\newblock 1974.
+\newblock {Amino Acid Difference Formula to Help Explain Protein Evolution}.
+\newblock {\em Science} 185(4154):862–864.
+
 \bibitem[\protect\citeauthoryear{Ingalls \bgroup et al.\egroup
   }{2009}]{mci/Ingalls2009}
 Ingalls, T.; Martius, G.; Hellmuth, M.; Marz, M.; and Prohaska, S.~J.
@@ -23,25 +56,12 @@ Ingalls, T.; Martius, G.; Hellmuth, M.; Marz, M.; and Prohaska, S.~J.
   P., eds., {\em German conference on bioinformatics 2009},  93--103.
 \newblock Bonn: Gesellschaft für Informatik e.V.
 
-\bibitem[\protect\citeauthoryear{KhanAcademy}{2016}]{khan_academy_2016}
-KhanAcademy.
-\newblock 2016.
-\newblock {Overview of transcription}.
-\newblock {\em Khan Academy}.
-
 \bibitem[\protect\citeauthoryear{Plaisier, Meagher, and
   Barker}{2021}]{plaisier_meagher_barker_2021}
 Plaisier, H.; Meagher, T.~R.; and Barker, D.
 \newblock 2021.
 \newblock {DNA sonification for public engagement in Bioinformatics}.
 \newblock {\em Genome Biology}.
-
-\bibitem[\protect\citeauthoryear{Seaman and Buggs}{2020}]{seaman_buggs_2020}
-Seaman, J., and Buggs, R.~J.
-\newblock 2020.
-\newblock {FluentDNA: Nucleotide visualization of whole genomes, annotations,
-  and alignments}.
-\newblock {\em Frontiers}.
 
 \bibitem[\protect\citeauthoryear{Takahashi and
   Miller}{2007}]{takahashi_miller_2007}
