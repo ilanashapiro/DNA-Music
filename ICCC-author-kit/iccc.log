@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  27 APR 2023 00:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  28 APR 2023 01:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -190,42 +190,65 @@ Package caption Info: Standard document class detected.
 \c@caption@flags=\count280
 \c@continuedfloat=\count281
 )
+(/usr/local/texlive/2022/texmf-dist/tex/latex/arydshln/arydshln.sty
+Package: arydshln 2019/02/21 v1.76 
+\dashlinedash=\dimen160
+\dashlinegap=\dimen161
+\adl@box=\box59
+\adl@height=\dimen162
+\adl@heightsave=\dimen163
+\adl@depth=\dimen164
+\adl@depthsave=\dimen165
+\adl@finaldepth=\dimen166
+\adl@columns=\count282
+\adl@ncol=\count283
+\adl@currentcolumn=\count284
+\adl@currentcolumnsave=\count285
+\adl@totalheight=\count286
+\adl@totalheightsave=\count287
+\adl@dash=\count288
+\adl@gap=\count289
+\adl@cla=\count290
+\adl@clb=\count291
+\adl@everyvbox=\toks22
+\adl@LTpagetotal=\dimen167
+)
 LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 3
-1.
+2.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 ) (./iccc.aux)
 \openout1 = `iccc.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 
 (/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count282
-\scratchdimen=\dimen160
-\scratchbox=\box59
-\nofMPsegments=\count283
-\nofMParguments=\count284
-\everyMPshowfont=\toks22
-\MPscratchCnt=\count285
-\MPscratchDim=\dimen161
-\MPnumerator=\count286
-\makeMPintoPDFobject=\count287
-\everyMPtoPDFconversion=\toks23
+\scratchcounter=\count292
+\scratchdimen=\dimen168
+\scratchbox=\box60
+\nofMPsegments=\count293
+\nofMParguments=\count294
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count295
+\MPscratchDim=\dimen169
+\MPnumerator=\count296
+\makeMPintoPDFobject=\count297
+\everyMPtoPDFconversion=\toks24
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -249,10 +272,10 @@ File: images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type
 png)
 <use images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png>
 Package pdftex.def Info: images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png 
- used on input line 87.
+ used on input line 89.
 (pdftex.def)             Requested size: 242.82503pt x 102.71655pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 87--88
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 89--90
  [][] 
  []
 
@@ -262,10 +285,10 @@ File: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type
  png)
 <use images/post_processed_seq_homo_sapiens_tp53_ABBREV.png>
 Package pdftex.def Info: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png
-  used on input line 99.
+  used on input line 101.
 (pdftex.def)             Requested size: 242.82503pt x 130.2446pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 99--100
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 101--102
  [][] 
  []
 
@@ -277,7 +300,7 @@ cessed_seq_homo_sapiens_tp53_ABBREV.png>]
 <images/splice_site_example.png, id=18, 630.355pt x 124.465pt>
 File: images/splice_site_example.png Graphic file (type png)
 <use images/splice_site_example.png>
-Package pdftex.def Info: images/splice_site_example.png  used on input line 141
+Package pdftex.def Info: images/splice_site_example.png  used on input line 143
 .
 (pdftex.def)             Requested size: 192.24066pt x 37.95891pt.
  [3 <./images/splice_site_example.png>]
@@ -285,10 +308,10 @@ Package pdftex.def Info: images/splice_site_example.png  used on input line 141
 File: images/danio_rerio_start_translation.png Graphic file (type png)
 <use images/danio_rerio_start_translation.png>
 Package pdftex.def Info: images/danio_rerio_start_translation.png  used on inpu
-t line 233.
+t line 237.
 (pdftex.def)             Requested size: 242.82503pt x 123.95161pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 233--235
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 237--239
  [][] 
  []
 
@@ -296,10 +319,10 @@ Overfull \hbox (3.43065pt too wide) in paragraph at lines 233--235
 File: images/danio_rerio_end_translation.png Graphic file (type png)
 <use images/danio_rerio_end_translation.png>
 Package pdftex.def Info: images/danio_rerio_end_translation.png  used on input 
-line 253.
+line 258.
 (pdftex.def)             Requested size: 242.82503pt x 40.01498pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 253--254
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 258--259
  [][] 
  []
 
@@ -313,23 +336,25 @@ Underfull \hbox (badness 1137) in paragraph at lines 34--38
 
 ] (./iccc.aux) ) 
 Here is how much of TeX's memory you used:
- 4507 strings out of 478268
- 77905 string characters out of 5846346
+ 4726 strings out of 478268
+ 81139 string characters out of 5846346
  395335 words of memory out of 5000000
- 22673 multiletter control sequences out of 15000+600000
+ 22888 multiletter control sequences out of 15000+600000
  486896 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,14n,77p,1351b,365s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 68i,16n,77p,1175b,365s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc
-}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.
-pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix
-16.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></u
-sr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/t
-exlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on iccc.pdf (5 pages, 725364 bytes).
+}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
+usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.pfb
+></usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix16.
+pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/
+local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texl
+ive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on iccc.pdf (5 pages, 743423 bytes).
 PDF statistics:
- 57 PDF objects out of 1000 (max. 8388607)
- 29 compressed objects within 1 object stream
+ 67 PDF objects out of 1000 (max. 8388607)
+ 35 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -32,6 +32,12 @@ AMINO_ACIDS = { #essential
                 "ATT":"C#",
                 "ATC":"C#",
                 "ATA":"C#", #isoleucine
+                "TTA":"C#",
+                "TTG":"C#",
+                "CTT":"C#",
+                "CTC":"C#",
+                "CTA":"C#",
+                "CTG":"C#", #leucine -- group with isoleucine since they're most similar by Grantham's distance
                 "AAA":"D",
                 "AAG":"D", #lysine
                 "ACT":"Eb",
@@ -41,28 +47,24 @@ AMINO_ACIDS = { #essential
                 "TTT":"E",
                 "TTC":"E", #phenylalanine
                 "TGG":"F", #tryptophan
-                "TTA":"F#",
-                "TTG":"F#",
-                "CTT":"F#",
-                "CTC":"F#",
-                "CTA":"F#",
-                "CTG":"F#", #leucine
-                "CAT":"G",
-                "CAC":"G", #histidine
-                "GTT":"Ab",
-                "GTC":"Ab",
-                "GTA":"Ab",
-                "GTG":"Ab", #valine
+                "CAT":"F#",
+                "CAC":"F#", #histidine
+                "GTT":"G",
+                "GTC":"G",
+                "GTA":"G",
+                "GTG":"G", #valine
 
                 #nonessential
-                "AAT":"A",
-                "AAC":"A", #asparagine
-                "GAT":"Bb",
-                "GAC":"Bb", #aspartate 
-                "GCT":"B",
-                "GCC":"B",
-                "GCA":"B",
-                "GCG":"B", #alanine
+                "AAT":"Ab",
+                "AAC":"Ab", #asparagine
+                "GAT":"A",
+                "GAC":"A", #aspartate 
+                "GCT":"Bb",
+                "GCC":"Bb",
+                "GCA":"Bb",
+                "GCG":"Bb", #alanine
+                "GAA":"B",
+                "GAG":"B", #glutamate
                 
                 #conditionally essential
                 "TAT":"C",
@@ -86,9 +88,7 @@ AMINO_ACIDS = { #essential
                 "CCA":"G",
                 "CCG":"G", #proline
                 "CAA":"A",
-                "CAG":"A",
-                "GAA":"A",
-                "GAG":"A", #glutamine/glutamic acid
+                "CAG":"A", #glutamine
                 "GGT":"B",
                 "GGC":"B",
                 "GGA":"B",
