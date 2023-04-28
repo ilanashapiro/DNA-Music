@@ -127,9 +127,7 @@ CONDITIONALLY_ESSENTIAL = ["TAT",
                 "CCA",
                 "CCG", #proline
                 "CAA",
-                "CAG",
-                "GAA",
-                "GAG", #glutamine/glutamic acid
+                "CAG", #glutamine
                 "GGT",
                 "GGC",
                 "GGA",
