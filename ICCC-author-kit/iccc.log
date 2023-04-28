@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  28 APR 2023 11:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  28 APR 2023 14:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -279,6 +279,9 @@ Overfull \hbox (3.43065pt too wide) in paragraph at lines 88--89
  [][] 
  []
 
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
 <images/post_processed_seq_homo_sapiens_tp53_ABBREV.png, id=10, 593.21625pt x 3
 18.18875pt>
 File: images/post_processed_seq_homo_sapiens_tp53_ABBREV.png Graphic file (type
@@ -292,9 +295,6 @@ Overfull \hbox (3.43065pt too wide) in paragraph at lines 100--101
  [][] 
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
 [2 <./images/pre_processed_seq_homo_sapiens_tp53_ABBREV.png> <./images/post_pro
 cessed_seq_homo_sapiens_tp53_ABBREV.png>]
 <images/splice_site_example.png, id=18, 687.56876pt x 115.43124pt>
@@ -303,43 +303,50 @@ File: images/splice_site_example.png Graphic file (type png)
 Package pdftex.def Info: images/splice_site_example.png  used on input line 142
 .
 (pdftex.def)             Requested size: 192.24066pt x 32.27296pt.
- [3 <./images/splice_site_example.png>]
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[3 <./images/splice_site_example.png>]
 <images/danio_rerio_start_translation.png, id=24, 958.58125pt x 473.77pt>
 File: images/danio_rerio_start_translation.png Graphic file (type png)
 <use images/danio_rerio_start_translation.png>
 Package pdftex.def Info: images/danio_rerio_start_translation.png  used on inpu
-t line 240.
+t line 236.
 (pdftex.def)             Requested size: 242.82503pt x 120.01093pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 240--241
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 236--237
  [][] 
  []
 
-<images/danio_rerio_end_translation.png, id=25, 660.4675pt x 108.405pt>
+<images/danio_rerio_end_translation.png, id=25, 670.505pt x 123.46124pt>
 File: images/danio_rerio_end_translation.png Graphic file (type png)
 <use images/danio_rerio_end_translation.png>
 Package pdftex.def Info: images/danio_rerio_end_translation.png  used on input 
-line 258.
-(pdftex.def)             Requested size: 242.82503pt x 39.85612pt.
+line 254.
+(pdftex.def)             Requested size: 242.82503pt x 44.71162pt.
 
-Overfull \hbox (3.43065pt too wide) in paragraph at lines 258--259
+Overfull \hbox (3.43065pt too wide) in paragraph at lines 254--255
  [][] 
  []
 
 (./iccc.bbl [4 <./images/danio_rerio_start_translation.png> <./images/danio_rer
 io_end_translation.png>]
-Underfull \hbox (badness 1742) in paragraph at lines 45--49
+Underfull \hbox (badness 1742) in paragraph at lines 51--55
 []\OT1/ptm/m/n/10 Grantham, R.  1974.  Amino Acid Dif-fer-ence For-
  []
 
 
-Underfull \hbox (badness 4505) in paragraph at lines 45--49
+Underfull \hbox (badness 4505) in paragraph at lines 51--55
 \OT1/ptm/m/n/10 mula to Help Ex-plain Pro-tein Evo-lu-tion.  \OT1/ptm/m/it/10 S
 ci-ence
  []
 
 
-Underfull \hbox (badness 1137) in paragraph at lines 61--65
+Underfull \hbox (badness 1137) in paragraph at lines 67--71
 []\OT1/ptm/m/n/10 Plaisier, H.; Meagher, T. R.; and Barker, D.  2021.
  []
 
@@ -347,13 +354,13 @@ Underfull \hbox (badness 1137) in paragraph at lines 61--65
 
 ] (./iccc.aux) ) 
 Here is how much of TeX's memory you used:
- 4729 strings out of 478268
- 81183 string characters out of 5846346
- 395335 words of memory out of 5000000
- 22891 multiletter control sequences out of 15000+600000
+ 4730 strings out of 478268
+ 81197 string characters out of 5846346
+ 396335 words of memory out of 5000000
+ 22892 multiletter control sequences out of 15000+600000
  486896 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,16n,77p,1357b,365s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 68i,16n,77p,1334b,365s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc
 }</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
@@ -362,7 +369,7 @@ usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.pfb
 pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/
 local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texl
 ive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on iccc.pdf (5 pages, 815757 bytes).
+Output written on iccc.pdf (5 pages, 817268 bytes).
 PDF statistics:
  67 PDF objects out of 1000 (max. 8388607)
  35 compressed objects within 1 object stream
