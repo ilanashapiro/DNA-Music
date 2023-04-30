@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  28 APR 2023 14:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.13)  30 APR 2023 12:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -333,8 +333,8 @@ Overfull \hbox (3.43065pt too wide) in paragraph at lines 254--255
  [][] 
  []
 
-(./iccc.bbl [4 <./images/danio_rerio_start_translation.png> <./images/danio_rer
-io_end_translation.png>]
+[4 <./images/danio_rerio_start_translation.png> <./images/danio_rerio_end_trans
+lation.png>] (./iccc.bbl
 Underfull \hbox (badness 1742) in paragraph at lines 51--55
 []\OT1/ptm/m/n/10 Grantham, R.  1974.  Amino Acid Dif-fer-ence For-
  []
@@ -369,7 +369,7 @@ usr/local/texlive/2022/texmf-dist/fonts/type1/public/musixtex-fonts/musix11.pfb
 pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/
 local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texl
 ive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on iccc.pdf (5 pages, 817268 bytes).
+Output written on iccc.pdf (5 pages, 818082 bytes).
 PDF statistics:
  67 PDF objects out of 1000 (max. 8388607)
  35 compressed objects within 1 object stream
